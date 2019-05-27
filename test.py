@@ -32,9 +32,11 @@ def compute_watering_minutes():
 
 def enable(valve_id):
     print("Enable valve num: " + str(valve_id))
+    print("Now watering........")
 
 
 def disable(valve_id):
+    print("..............and watering stops")
     print("Disable valve num: " + str(valve_id))
     result_available.set()
 
