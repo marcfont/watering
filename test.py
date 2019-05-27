@@ -1,5 +1,5 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from time import sleep
 import threading
 import json
@@ -24,6 +24,7 @@ def mc_get_max_temperatures():
 def compute_watering_minutes():
     print("I am compute_watering_minutes: ")
 
+    # TODO: to be implemented
     global minutes
     minutes = [11, 22, 33]
 
@@ -31,13 +32,16 @@ def compute_watering_minutes():
 
 
 def enable(valve_id):
+    print('enable thread id: ' + str(threading.get_ident()))
     print("Enable valve num: " + str(valve_id))
     print("Now watering........")
 
 
 def disable(valve_id):
+    print('disable thread id: ' + str(threading.get_ident()))
     print("..............and watering stops")
     print("Disable valve num: " + str(valve_id))
+    global result_available
     result_available.set()
 
 
@@ -55,17 +59,23 @@ if __name__ == '__main__':
     RIGHT_CIRCUIT = 2
     CIRCUITS = [LEFT_CIRCUIT, FAR_CIRCUIT, RIGHT_CIRCUIT]
 
-    START_TIME = time(12, 0, 0)
+    START_TIME = time(17, 50, 25)
     DELAY_BETWEEN_CIRCUITS = time(00, 00, 5)
 
     now = datetime.now().replace(hour=START_TIME.hour, minute=START_TIME.minute, second=START_TIME.second)
 
+    print('main thread id: '+str(threading.get_ident()))
     print(now)
 
-    # runs once a day at hour:minute:second
+    # runs once a day at START_TIME
     background_scheduler.add_job(compute_watering_minutes, 'cron', hour=now.hour, minute=now.minute, second=now.second,
                                  max_instances=1)
 
+    # main loop structure:
+    # if watering times have been computed and times are greater than zero
+    #   enable i
+    #   schedule a date triggered job to run disable(i) at now + minutes[i]
+    #   sleep for DELAY_BETWEEN_CIRCUITS seconds
     while True:
         if minutes:
             for i in CIRCUITS:
@@ -75,19 +85,18 @@ if __name__ == '__main__':
                     # Start watering cycle for i-th circuit
                     enable(i)
 
+                    # Schedule stop watering in minutes[i]
                     # TODO: canviar a minuts i no segons
-                    # deadline.replace(second=deadline.minute + minutes[i])
-                    deadline.replace(second=deadline.second + minutes[i])
+                    # deadline = deadline + timedelta(minutes=minutes[i])
+                    deadline = deadline + timedelta(seconds=minutes[i])
                     background_scheduler.add_job(disable, 'date', run_date=deadline, args=[i], id='disable'+str(i))
+                    # waits for disable to be executed
                     result_available.wait()
+                    result_available.clear()
 
+                    # Delays next valve opening for DELAY_BETWEEN_CIRCUITS seconds
                     print("now sleeping...")
                     sleep(DELAY_BETWEEN_CIRCUITS.second)
-
-                    # for i = 1 to 3
-                    # enable i
-                    # schedule a date triggered job to run disable(i) at now + minutes[i]
-                    # sleep for DELAY_BETWEEN_CIRCUITS seconds
 
             print("For loop finished")
             minutes = None
