@@ -34,7 +34,7 @@ def enable(valve_id):
     print("Enable valve num: " + str(valve_id))
 
 
-def disable_and_continue(valve_id):
+def disable(valve_id):
     print("Disable valve num: " + str(valve_id))
     result_available.set()
 
@@ -67,21 +67,25 @@ if __name__ == '__main__':
     while True:
         if minutes:
             for i in CIRCUITS:
-                enable(i)
-
                 deadline = datetime.now()
-                # TODO: canviar a minuts i no segons
-                deadline.replace(second=deadline.second + minutes[i])
-                background_scheduler.add_job(disable_and_continue, 'date', run_date=deadline, args=[i])
-                result_available.wait()
 
-                print("now sleeping...")
-                sleep(DELAY_BETWEEN_CIRCUITS.second)
+                if minutes[i] > 0:
+                    # Start watering cycle for i-th circuit
+                    enable(i)
 
-                # for i = 1 to 3
-                # enable i
-                # schedule a date triggered job to run disable(i) at now + minutes[i]
-                # sleep for DELAY_BETWEEN_CIRCUITS seconds
+                    # TODO: canviar a minuts i no segons
+                    # deadline.replace(second=deadline.minute + minutes[i])
+                    deadline.replace(second=deadline.second + minutes[i])
+                    background_scheduler.add_job(disable, 'date', run_date=deadline, args=[i], id='disable'+str(i))
+                    result_available.wait()
+
+                    print("now sleeping...")
+                    sleep(DELAY_BETWEEN_CIRCUITS.second)
+
+                    # for i = 1 to 3
+                    # enable i
+                    # schedule a date triggered job to run disable(i) at now + minutes[i]
+                    # sleep for DELAY_BETWEEN_CIRCUITS seconds
 
             print("For loop finished")
             minutes = None
