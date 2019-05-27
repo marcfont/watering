@@ -10,7 +10,9 @@ def mc_get_max_temperatures():
     # todo: implement
 
     try:
-        r = requests.get('https://api.meteo.cat/xema/v1/variables/estadistics/diaris/1001?codiEstacio=UG&any=2013&mes=12')
+        payload = {'key1': 'value1', 'key2': 'value2'}
+        url = 'https://api.meteo.cat/xema/v1/variables/estadistics/diaris/1001?codiEstacio=UG&any=2013&mes=12'
+        r = requests.get(url, params=payload)
 
         # View response data.
         print(r.json())
