@@ -1,3 +1,4 @@
+api.meteo.cat 
 x-api-key
 yTLyU2J2XraoSZ4LEHpG35izWgS22AMs1DmRJqmZ
 
