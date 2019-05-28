@@ -10,7 +10,7 @@ def mc_get_max_temperatures():
 
     try:
         headers = {'x-api-key': 'yTLyU2J2XraoSZ4LEHpG35izWgS22AMs1DmRJqmZ'}
-        url = 'https://api.meteo.cat/xema/v1/variables/mesurades/36/2019/05/28?codiEstacio=CC'
+        url = 'https://api.meteo.cat/xema/v1/variables/mesurades/36/2019/05/27?codiEstacio=CC'
         r = requests.get(url, headers=headers, verify=False)
 
 
