@@ -19,6 +19,7 @@ def mc_get_temperatures_24h():
         # {'codi': 35, 'lectures':
         # [{'data': '2019-05-03T00:00Z', 'valor': 0.5, 'estat': 'V', 'baseHoraria': 'SH'},
         # {'data': '2019-05-03T00:30Z', 'valor': 0, 'estat': 'V', 'baseHoraria': 'SH'}]}
+        # todo: make it safe!
         data = json.loads(r.text)
 
         now = now - timedelta(days=1)
@@ -29,11 +30,14 @@ def mc_get_temperatures_24h():
 
         # dt = datetime.strptime('2019-05-03T00:00Z', '%Y-%m-%dT%H:%MZ')
 
-        if r.ok:
-            for d in data["lectures"]:
-                print(d["valor"])
-        else:
-            print('error')
+        data_merge = data2["lectures"] + data["lectures"]
+        print(data_merge)
+
+        # if r.ok:
+        #     for d in data["lectures"]:
+        #         print(d["valor"])
+        # else:
+        #     print('error')
 
     except ConnectionError as ex:
         print('Exception thrown: ConnectionError')
@@ -44,4 +48,4 @@ def mc_get_temperatures_24h():
 
 
 if __name__ == '__main__':
-    mc_get_temperatures()
+    mc_get_temperatures_24h()
