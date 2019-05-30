@@ -89,7 +89,7 @@ def evapotranspiration_rain_day(when):
     eq6 = eq4 * es_ea * eq3
     et0 = eq5 + eq6
 
-    return [et0, rain]
+    return [round(et0, 1), round(rain, 1)]
 
 
 if __name__ == '__main__':
