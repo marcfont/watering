@@ -17,7 +17,10 @@ Irradiància solar:
 https://api.meteo.cat/xema/v1/variables/mesurades/36/2019/05/03?codiEstacio=CC
 Irradiació = (average(irradiància) * segons en el període) / 1000000
 El càlcul té més sentit si només es tenen en compte els períodes en que la radiància més gran que zero 
-(si s'ingnora la nit). El meteo.cat no les ignora en les dades que presenta 
+(si s'ingnora la nit). El meteo.cat no les ignora en les dades que presenta
+
+Velocitat del vent a 10m (Orís no té disponible la de 2m):
+https://api.meteo.cat/xema/v1/variables/mesurades/30/2019/05/03?codiEstacio=CC 
 
 Evapotranspiració (va amb 3 dies de retard)
 https://api.meteo.cat/xema/v1/variables/estadistics/diaris/1700?codiEstacio=CC&any=2019&mes=05
