@@ -35,7 +35,7 @@ def evapotranspiracio():
     # anything between 0.5 and 0.65 would be reasonable
     kj = 0.5
     # between 8 and 20 mm/h
-    # TODO: this has to be calculated when cudalimeter is in place
+    # TODO: this has to be calculated when caudalimeter is in place
     cabal_l_m2_h = 14
     # percentage
     cu = 80

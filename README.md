@@ -28,6 +28,8 @@ https://api.meteo.cat/xema/v1/variables/estadistics/diaris/1700?codiEstacio=CC&a
 Càlcul Evapotranspiració:
 http://www.fao.org/3/X0490E/x0490e08.htm#TopOfPage
 
+Precipitació efectiva = 75% precipitació mesurada
+
 RuralCat:
 https://ruralcat.gencat.cat/web/guest/eines-sub
 
