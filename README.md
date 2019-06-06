@@ -28,10 +28,35 @@ https://api.meteo.cat/xema/v1/variables/estadistics/diaris/1700?codiEstacio=CC&a
 Càlcul Evapotranspiració:
 http://www.fao.org/3/X0490E/x0490e08.htm#TopOfPage
 
-Precipitació efectiva = 75% precipitació mesurada
-
 RuralCat:
 https://ruralcat.gencat.cat/web/guest/eines-sub
 
 Read first:
 https://www.hydropoint.com/what-is-evapotranspiration/
+
+ET0 real (mm equivalent a l/m2) = Kj * ET0 teòrica
+Kj del jardí = 60%
+
+Pluja efectiva (mm equivalent a l/m2) = 75% de la pluja real
+
+Necessitat hídrica (l/m2) = ET0 real - Pluja efectiva
+
+Superfície de gespa = 96m2
+Superfície de maduixers = 6m2
+
+Càlculs de pa pluviometria teòrica:
+https://www.rainbird.com/sites/default/files/media/documents/2018-02/chart_3500.pdf
+Pressió 3 bar
+4 x Noozle 1, 90º --> 12 l/m2
+2 x Noozle 2, 180º --> 15 l/m2
+Dividiré per dos perquè els esperssors estan sobreposats 
+Pluviometria teòrica gespa = (4 * 12 + 2 * 15) = 78 l/m2
+
+Goters per m2 = 20 / 6 = 3.33
+Cabal teòric dels goters = 25 l/h
+Considerant que hi ha 3 goters per m2 --> 75 l/m2
+
+
+
+
+
