@@ -56,6 +56,19 @@ Goters per m2 = 20 / 6 = 3.33
 Cabal teòric dels goters = 25 l/h
 Considerant que hi ha 3 goters per m2 --> 75 l/m2
 
+GPIO
+2, Taronja, caudalímetre 
+3, Verd, ventilador
+4, Gris
+5, Marró
+6, Blau 
+
+Relés
+1, ventilador
+2, dreta
+3, fons
+4, esquerra
+
 
 
 
