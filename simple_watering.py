@@ -108,7 +108,7 @@ if __name__ == '__main__':
                                      second=night_run.second, max_instances=1, args=[CIRCUITS[i]])
 
     logging.info(background_scheduler.print_jobs())
-    send_email("Watering scheduled (program restart)", background_scheduler.print_jobs())
+    send_email("Watering scheduled (program restart)", str(background_scheduler.print_jobs()))
 
     while True:
         pass
