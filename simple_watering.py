@@ -48,8 +48,8 @@ def enable_valve(valve_id):
 
 
 def disable_valve(valve_id):
-    print("..............and watering stops")
-    print("Disable valve in pin: " + str(valve_id))
+    logging.info("..............and watering stops")
+    logging.info("Disable valve in pin: " + str(valve_id))
     send_email("Disable", str(CIRCUIT_NAMES[valve_id]) + " has been disabled.")
 
     GPIO.output(valve_id, GPIO.HIGH)
@@ -76,7 +76,6 @@ if __name__ == '__main__':
 
     background_scheduler = BackgroundScheduler()
     background_scheduler.start()
-    not_scheduled = True
 
     CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
     CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Right circuit')])
