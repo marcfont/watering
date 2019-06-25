@@ -44,7 +44,7 @@ def enable_valve(valve_id):
     logging.info("Now watering........")
     send_email("Enable", str(CIRCUIT_NAMES[valve_id]) + " has been enabled.")
 
-    GPIO.output(valve_id, GPIO.HIGH)
+    GPIO.output(valve_id, GPIO.LOW)
 
 
 def disable_valve(valve_id):
@@ -52,7 +52,7 @@ def disable_valve(valve_id):
     print("Disable valve in pin: " + str(valve_id))
     send_email("Disable", str(CIRCUIT_NAMES[valve_id]) + " has been disabled.")
 
-    GPIO.output(valve_id, GPIO.LOW)
+    GPIO.output(valve_id, GPIO.HIGH)
 
 
 def gpio_init():
@@ -63,9 +63,9 @@ def gpio_init():
     GPIO.setup(GPIO_6_LEFT, GPIO.OUT)
 
     # this shouldn't be needed but here it comes just in case
-    GPIO.output(GPIO_4_RIGHT, GPIO.LOW)
-    GPIO.output(GPIO_5_FAR, GPIO.LOW)
-    GPIO.output(GPIO_6_LEFT, GPIO.LOW)
+    GPIO.output(GPIO_4_RIGHT, GPIO.HIGH)
+    GPIO.output(GPIO_5_FAR, GPIO.HIGH)
+    GPIO.output(GPIO_6_LEFT, GPIO.HIGH)
 
 
 if __name__ == '__main__':
