@@ -1,5 +1,5 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime, time, timedelta, date
+from datetime import datetime, time, timedelta
 from time import sleep
 import threading
 import json
@@ -8,15 +8,18 @@ import urllib3
 import statistics
 from datetime import date
 import math
+import RPi.GPIO as GPIO
 # no need to worry about SSL to verify connection to meteo.cat
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 HEADER = {'x-api-key': 'yTLyU2J2XraoSZ4LEHpG35izWgS22AMs1DmRJqmZ'}
 
+GPIO.setmode(GPIO.BOARD)  #Board GPIO Pin numbers
+GPIO2_FLOW_METER = 13
+GPIO4_RIGHT = 16
+GPIO5_FAR = 18
+GPIO6_LEFT = 22
 
-LEFT_CIRCUIT = 0
-FAR_CIRCUIT = 1
-RIGHT_CIRCUIT = 2
-CIRCUITS = [LEFT_CIRCUIT, FAR_CIRCUIT, RIGHT_CIRCUIT]
+CIRCUITS = [GPIO4_RIGHT, GPIO5_FAR, GPIO6_LEFT]
 
 START_TIME = time(16, 0, 0)
 DELAY_BETWEEN_CIRCUITS = time(00, 00, 5)
@@ -128,11 +131,13 @@ def evapotranspiration_rain_day(num_days):
 def compute_watering_minutes():
     print("I am compute_watering_minutes: ")
 
-    evapotranspiration_rain_day(7)
+    # TODO: call to evapo calculation so it computes minutes instead of manually set (last line of code)
+    # evapotranspiration_rain_day(3)
 
-    # TODO: to be implemented
+    # TODO: implement code for deriving minutes from evapo, square meters, flow and so on...
+
     global minutes
-    minutes = [11, 22, 33]
+    minutes = [20, 7, 20]
 
     print(minutes)
 
@@ -141,17 +146,36 @@ def enable(valve_id):
     print('enable thread id: ' + str(threading.get_ident()))
     print("Enable valve num: " + str(valve_id))
     print("Now watering........")
+    GPIO.output(valve_id, GPIO.HIGH)
 
 
 def disable(valve_id):
     print('disable thread id: ' + str(threading.get_ident()))
     print("..............and watering stops")
     print("Disable valve num: " + str(valve_id))
+    GPIO.output(valve_id, GPIO.LOW)
+
     global result_available
     result_available.set()
 
 
+def gpio_init():
+    GPIO.setmode(GPIO.BOARD)
+
+    GPIO.setup(GPIO2_FLOW_METER, GPIO.IN)
+    GPIO.setup(GPIO4_RIGHT, GPIO.OUT)
+    GPIO.setup(GPIO5_FAR, GPIO.OUT)
+    GPIO.setup(GPIO6_LEFT, GPIO.OUT)
+
+    # this shouldn't be needed but here it comes just in case
+    GPIO.output(GPIO4_RIGHT, GPIO.LOW)
+    GPIO.output(GPIO5_FAR, GPIO.LOW)
+    GPIO.output(GPIO6_LEFT, GPIO.LOW)
+
+
 if __name__ == '__main__':
+    gpio_init()
+
     background_scheduler = BackgroundScheduler()
     background_scheduler.start()
     not_scheduled = True
@@ -193,7 +217,7 @@ if __name__ == '__main__':
                     result_available.clear()
 
                     # Delays next valve opening for DELAY_BETWEEN_CIRCUITS seconds
-                    print("now sleeping...")
+                    print("Now sleeping...")
                     sleep(DELAY_BETWEEN_CIRCUITS.second)
 
             print("For loop finished")
