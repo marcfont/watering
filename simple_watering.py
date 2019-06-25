@@ -8,6 +8,17 @@ from email.mime.text import MIMEText
 import RPi.GPIO as GPIO
 
 
+GPIO_4_RIGHT = 16
+GPIO_5_FAR = 18
+GPIO_6_LEFT = 22
+
+START_TIME_MORNING = time(6, 0, 0)
+START_TIME_NIGHT = time(22, 0, 0)
+
+MINUTES_MORNING = [20, 5, 20]
+MINUTES_NIGHT = [5, 1, 5]
+
+
 def send_email(subject, body):
     port = 465  # For SSL
     smtp_server = "smtp.gmail.com"
@@ -67,20 +78,10 @@ if __name__ == '__main__':
     background_scheduler.start()
     not_scheduled = True
 
-    GPIO_4_RIGHT = 16
-    GPIO_5_FAR = 18
-    GPIO_6_LEFT = 22
-
     CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
     CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Right circuit')])
 
     gpio_init()
-
-    START_TIME_MORNING = time(6, 0, 0)
-    START_TIME_NIGHT = time(22, 0, 0)
-
-    MINUTES_MORNING = [20, 5, 20]
-    MINUTES_NIGHT = [5, 1, 5]
 
     morning_run = datetime.now().replace(hour=START_TIME_MORNING.hour, minute=START_TIME_MORNING.minute,
                                          second=START_TIME_MORNING.second)
@@ -107,6 +108,7 @@ if __name__ == '__main__':
                                      second=night_run.second, max_instances=1, args=[CIRCUITS[i]])
 
     logging.info(background_scheduler.print_jobs())
+    send_email("Watering scheduled (program restart)", background_scheduler.print_jobs())
 
     while True:
         pass
