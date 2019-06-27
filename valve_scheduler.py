@@ -15,8 +15,8 @@ GPIO_6_LEFT = 22
 START_TIME_MORNING = time(6, 0, 0)
 START_TIME_NIGHT = time(22, 0, 0)
 
-MINUTES_MORNING = [20, 5, 20]
-MINUTES_NIGHT = [5, 1, 5]
+MINUTES_MORNING = [22, 7, 22]
+MINUTES_NIGHT = [8, 3, 8]
 
 
 def send_email(subject, body):
