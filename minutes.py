@@ -70,7 +70,7 @@ def __meteocat_api_request(api_date, operation_id):
         print(ex)
 
 
-def evapotranspiration_rain_day(num_days):
+def __evapotranspiration_rain_day(num_days):
     """
     evapotranspiration calculation using meteo.cat api queries and FAO formula (see readme)
     :param num_days: number of days to take into account for the calculation. Must be positive number. 1 means today,
@@ -112,9 +112,16 @@ def evapotranspiration_rain_day(num_days):
         et0_out = et0_out + et0
         rain_out = rain_out + rain
 
-    print([round(et0_out, 1), round(rain_out, 1)])
     return [round(et0_out, 1), round(rain_out, 1)]
 
 
 def compute_watering_minutes():
-    return evapotranspiration_rain_day(EVAPO_NUM_DAYS_CALCULATION)
+    return __evapotranspiration_rain_day(EVAPO_NUM_DAYS_CALCULATION)
+
+
+if __name__ == '__main__':
+    print(__evapotranspiration_rain_day(1))
+    print(__evapotranspiration_rain_day(2))
+    print(__evapotranspiration_rain_day(3))
+    print(__evapotranspiration_rain_day(4))
+    print(__evapotranspiration_rain_day(5))
