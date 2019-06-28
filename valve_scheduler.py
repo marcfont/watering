@@ -13,7 +13,7 @@ GPIO_5_FAR = 18
 GPIO_6_LEFT = 22
 
 START_TIME_MORNING = time(6, 0, 0)
-START_TIME_NIGHT = time(22, 0, 0)
+START_TIME_NIGHT = time(23, 10, 0)
 
 MINUTES_MORNING = [22, 7, 22]
 MINUTES_NIGHT = [8, 3, 8]
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     background_scheduler.start()
 
     CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
-    CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Right circuit')])
+    CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 
     gpio_init()
 
