@@ -125,3 +125,5 @@ if __name__ == '__main__':
     print(__evapotranspiration_rain_day(3))
     print(__evapotranspiration_rain_day(4))
     print(__evapotranspiration_rain_day(5))
+    print(__evapotranspiration_rain_day(6))
+    print(__evapotranspiration_rain_day(7))
