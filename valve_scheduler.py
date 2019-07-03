@@ -18,10 +18,10 @@ CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit
 DELAY_BETWEEN_CIRCUITS = 5
 
 START_TIME_MORNING = time(6, 0, 0)
-START_TIME_NIGHT = time(22, 33, 0)
+START_TIME_NIGHT = time(22, 0, 0)
 
-MINUTES_MORNING = [20, 6, 20]
-MINUTES_NIGHT = [0, 0, 0]
+MINUTES_MORNING = [10, 3, 10]
+MINUTES_NIGHT = [2, 1, 2]
 
 flow_rising_count = 0
 real_start_time_s = None
@@ -104,7 +104,7 @@ def gpio_init():
 
 if __name__ == '__main__':
     logging.basicConfig(filename='simple_watering.log', level=logging.INFO)
-    #TODO: add boot time
+    # TODO: add boot timestamp
     logging.info('---------------------------------------------')
     logging.info('---------------system boot-------------------')
     logging.info('---------------------------------------------')
@@ -120,6 +120,7 @@ if __name__ == '__main__':
                                        second=START_TIME_NIGHT.second)
 
     for i in range(0, len(CIRCUITS)):
+        # TODO: controlar si minuts == 0 que no faci res
         # run once a day at START_TIME_MORNING + DELAY_BETWEEN_CIRCUITS seconds for MINUTES_MORNING[i] minutes
         morning_run = morning_run + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
         background_scheduler.add_job(enable_valve, 'cron', hour=morning_run.hour, minute=morning_run.minute,
