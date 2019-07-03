@@ -122,7 +122,6 @@ if __name__ == '__main__':
                                      second=morning_run.second, max_instances=1, args=[CIRCUITS[i]])
 
         morning_run = morning_run + timedelta(minutes=MINUTES_MORNING[i], seconds=1)
-        # morning_run = morning_run + timedelta(seconds=MINUTES_MORNING[i]+1)
         background_scheduler.add_job(disable_valve, 'cron', hour=morning_run.hour, minute=morning_run.minute,
                                      second=morning_run.second, max_instances=1, args=[CIRCUITS[i]])
 
@@ -132,7 +131,6 @@ if __name__ == '__main__':
                                      second=night_run.second, max_instances=1, args=[CIRCUITS[i]])
 
         night_run = night_run + timedelta(minutes=MINUTES_NIGHT[i], seconds=1)
-        # night_run = night_run + timedelta(seconds=MINUTES_NIGHT[i]+1)
         background_scheduler.add_job(disable_valve, 'cron', hour=night_run.hour, minute=night_run.minute,
                                      second=night_run.second, max_instances=1, args=[CIRCUITS[i]])
 
