@@ -66,15 +66,17 @@ def disable_valve(valve_id):
     pouring_time_s = real_stop_time_s - real_start_time_s
 
     global flow_rising_count
+    flow_l_per_minute = (flow_rising_count / pouring_time_s) / 4.8
+    volume = flow_l_per_minute * (pouring_time_s * 60)
 
-    flow = (flow_rising_count / pouring_time_s) / 4.8
+    flow_rising_count = 0
 
     send_email("Disable", str(CIRCUIT_NAMES[valve_id]) + " has been disabled.\nWatering volume has been "
-               + str(round(flow)) + " liters.")
+               + str(round(volume)) + " liters.")
 
     logging.info("..............and watering stops")
     logging.info("Disable valve in pin: " + str(valve_id))
-    logging.info("Watering volume has been " + str(round(flow)) + " liters")
+    logging.info("Watering volume has been " + str(round(volume)) + " liters")
 
 
 def sensor_callback(channel):
