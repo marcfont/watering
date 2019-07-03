@@ -17,7 +17,7 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 
 START_TIME_MORNING = time(6, 0, 0)
-START_TIME_NIGHT = time(22, 9, 0)
+START_TIME_NIGHT = time(22, 19, 0)
 
 MINUTES_MORNING = [20, 6, 20]
 MINUTES_NIGHT = [1, 0, 0]
@@ -52,7 +52,7 @@ def enable_valve(valve_id):
     send_email("Enable", str(CIRCUIT_NAMES[valve_id]) + " has been enabled.")
 
     global real_start_time_s
-    real_start_time_s = time()
+    real_start_time_s = datetime.utcnow()
     GPIO.output(valve_id, GPIO.LOW)
     GPIO.add_event_detect(GPIO_2_FLOW_METER, GPIO.RISING, callback=sensor_callback)
 
@@ -62,8 +62,9 @@ def disable_valve(valve_id):
     GPIO.remove_event_detect(GPIO_2_FLOW_METER)
 
     global real_start_time_s
-    real_stop_time_s = time()
-    pouring_time_s = real_stop_time_s - real_start_time_s
+    real_stop_time_s = datetime.utcnow()
+    delta = real_stop_time_s - real_start_time_s
+    pouring_time_s = delta.seconds
 
     global flow_rising_count
     flow_l_per_minute = (flow_rising_count / pouring_time_s) / 4.8
