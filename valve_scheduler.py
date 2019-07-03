@@ -69,7 +69,7 @@ def disable_valve(valve_id):
 
     global flow_rising_count
     flow_l_per_minute = (flow_rising_count / pouring_time_s) / 4.8
-    volume = flow_l_per_minute * (pouring_time_s * 60)
+    volume = flow_l_per_minute * (pouring_time_s / 60)
 
     flow_rising_count = 0
 
