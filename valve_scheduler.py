@@ -15,9 +15,10 @@ GPIO_6_LEFT = 22
 
 CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
+DELAY_BETWEEN_CIRCUITS = 5
 
 START_TIME_MORNING = time(6, 0, 0)
-START_TIME_NIGHT = time(22, 19, 0)
+START_TIME_NIGHT = time(22, 28, 0)
 
 MINUTES_MORNING = [20, 6, 20]
 MINUTES_NIGHT = [1, 0, 0]
@@ -103,6 +104,7 @@ def gpio_init():
 
 if __name__ == '__main__':
     logging.basicConfig(filename='simple_watering.log', level=logging.INFO)
+    #TODO: add boot time
     logging.info('---------------------------------------------')
     logging.info('---------------system boot-------------------')
     logging.info('---------------------------------------------')
@@ -118,21 +120,21 @@ if __name__ == '__main__':
                                        second=START_TIME_NIGHT.second)
 
     for i in range(0, len(CIRCUITS)):
-        # run once a day at START_TIME_MORNING + 1 second for MINUTES_MORNING[i] minutes
-        morning_run = morning_run + timedelta(seconds=1)
+        # run once a day at START_TIME_MORNING + DELAY_BETWEEN_CIRCUITS seconds for MINUTES_MORNING[i] minutes
+        morning_run = morning_run + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
         background_scheduler.add_job(enable_valve, 'cron', hour=morning_run.hour, minute=morning_run.minute,
                                      second=morning_run.second, max_instances=1, args=[CIRCUITS[i]])
 
-        morning_run = morning_run + timedelta(minutes=MINUTES_MORNING[i], seconds=1)
+        morning_run = morning_run + timedelta(minutes=MINUTES_MORNING[i], seconds=DELAY_BETWEEN_CIRCUITS)
         background_scheduler.add_job(disable_valve, 'cron', hour=morning_run.hour, minute=morning_run.minute,
                                      second=morning_run.second, max_instances=1, args=[CIRCUITS[i]])
 
-        # run once a day at START_TIME_NIGHT + 1 second for MINUTES_NIGHT[i] minutes
-        night_run = night_run + timedelta(seconds=1)
+        # run once a day at START_TIME_NIGHT + DELAY_BETWEEN_CIRCUITS seconds for MINUTES_NIGHT[i] minutes
+        night_run = night_run + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
         background_scheduler.add_job(enable_valve, 'cron', hour=night_run.hour, minute=night_run.minute,
                                      second=night_run.second, max_instances=1, args=[CIRCUITS[i]])
 
-        night_run = night_run + timedelta(minutes=MINUTES_NIGHT[i], seconds=1)
+        night_run = night_run + timedelta(minutes=MINUTES_NIGHT[i], seconds=DELAY_BETWEEN_CIRCUITS)
         background_scheduler.add_job(disable_valve, 'cron', hour=night_run.hour, minute=night_run.minute,
                                      second=night_run.second, max_instances=1, args=[CIRCUITS[i]])
 
