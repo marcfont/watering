@@ -17,7 +17,7 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 
 START_TIME_MORNING = time(6, 0, 0)
-START_TIME_NIGHT = time(17, 44, 0)
+START_TIME_NIGHT = time(22, 02, 0)
 
 MINUTES_MORNING = [20, 6, 20]
 MINUTES_NIGHT = [1, 0, 0]
@@ -86,6 +86,7 @@ def sensor_callback(channel):
 
 def gpio_init():
     GPIO.setmode(GPIO.BOARD)
+    GPIO.setwarnings(False)
 
     GPIO.setup(GPIO_2_FLOW_METER, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
@@ -134,7 +135,6 @@ if __name__ == '__main__':
         background_scheduler.add_job(disable_valve, 'cron', hour=night_run.hour, minute=night_run.minute,
                                      second=night_run.second, max_instances=1, args=[CIRCUITS[i]])
 
-    logging.info(background_scheduler.print_jobs())
     send_email("Watering scheduled (program restart)", str(background_scheduler.print_jobs()))
 
     while True:
