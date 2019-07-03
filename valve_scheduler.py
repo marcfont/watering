@@ -52,7 +52,7 @@ def enable_valve(valve_id):
     send_email("Enable", str(CIRCUIT_NAMES[valve_id]) + " has been enabled.")
 
     global real_start_time_s
-    real_start_time_s = time.time()
+    real_start_time_s = time()
     GPIO.output(valve_id, GPIO.LOW)
     GPIO.add_event_detect(GPIO_2_FLOW_METER, GPIO.RISING, callback=sensor_callback)
 
@@ -62,7 +62,7 @@ def disable_valve(valve_id):
     GPIO.remove_event_detect(GPIO_2_FLOW_METER)
 
     global real_start_time_s
-    real_stop_time_s = time.time()
+    real_stop_time_s = time()
     pouring_time_s = real_stop_time_s - real_start_time_s
 
     global flow_rising_count
