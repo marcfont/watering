@@ -17,7 +17,7 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 
 START_TIME_MORNING = time(6, 0, 0)
-START_TIME_NIGHT = time(17, 42, 0)
+START_TIME_NIGHT = time(17, 45, 0)
 
 MINUTES_MORNING = [20, 6, 20]
 MINUTES_NIGHT = [1, 0, 0]
