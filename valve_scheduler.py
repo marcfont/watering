@@ -8,15 +8,22 @@ from email.mime.text import MIMEText
 import RPi.GPIO as GPIO
 
 
+GPIO_2_FLOW_METER = 13
 GPIO_4_RIGHT = 16
 GPIO_5_FAR = 18
 GPIO_6_LEFT = 22
 
+CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
+CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
+
 START_TIME_MORNING = time(6, 0, 0)
 START_TIME_NIGHT = time(22, 0, 0)
 
-MINUTES_MORNING = [22, 7, 22]
-MINUTES_NIGHT = [8, 3, 8]
+MINUTES_MORNING = [20, 6, 20]
+MINUTES_NIGHT = [6, 2, 6]
+
+flow_rising_count = 0
+real_start_time_s = None
 
 
 def send_email(subject, body):
@@ -44,19 +51,41 @@ def enable_valve(valve_id):
     logging.info("Now watering........")
     send_email("Enable", str(CIRCUIT_NAMES[valve_id]) + " has been enabled.")
 
+    global real_start_time_s
+    real_start_time_s = time.time()
     GPIO.output(valve_id, GPIO.LOW)
+    GPIO.add_event_detect(GPIO_2_FLOW_METER, GPIO.RISING, callback=sensor_callback)
 
 
 def disable_valve(valve_id):
+    GPIO.output(valve_id, GPIO.HIGH)
+    GPIO.remove_event_detect(GPIO_2_FLOW_METER)
+
+    global real_start_time_s
+    real_stop_time_s = time.time()
+    pouring_time_s = real_stop_time_s - real_start_time_s
+
+    global flow_rising_count
+
+    flow = (flow_rising_count / pouring_time_s) / 4.8
+
+    send_email("Disable", str(CIRCUIT_NAMES[valve_id]) + " has been disabled.\nWatering volume has been "
+               + str(round(flow)) + " liters.")
+
     logging.info("..............and watering stops")
     logging.info("Disable valve in pin: " + str(valve_id))
-    send_email("Disable", str(CIRCUIT_NAMES[valve_id]) + " has been disabled.")
+    logging.info("Watering volume has been " + str(round(flow)) + " liters")
 
-    GPIO.output(valve_id, GPIO.HIGH)
+
+def sensor_callback(channel):
+    global flow_rising_count
+    flow_rising_count = flow_rising_count + 1
 
 
 def gpio_init():
     GPIO.setmode(GPIO.BOARD)
+
+    GPIO.setup(GPIO_2_FLOW_METER, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
     GPIO.setup(GPIO_4_RIGHT, GPIO.OUT)
     GPIO.setup(GPIO_5_FAR, GPIO.OUT)
@@ -77,9 +106,6 @@ if __name__ == '__main__':
     background_scheduler = BackgroundScheduler()
     background_scheduler.start()
 
-    CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
-    CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
-
     gpio_init()
 
     morning_run = datetime.now().replace(hour=START_TIME_MORNING.hour, minute=START_TIME_MORNING.minute,
@@ -94,7 +120,7 @@ if __name__ == '__main__':
                                      second=morning_run.second, max_instances=1, args=[CIRCUITS[i]])
 
         morning_run = morning_run + timedelta(minutes=MINUTES_MORNING[i], seconds=1)
-        #morning_run = morning_run + timedelta(seconds=MINUTES_MORNING[i]+1)
+        # morning_run = morning_run + timedelta(seconds=MINUTES_MORNING[i]+1)
         background_scheduler.add_job(disable_valve, 'cron', hour=morning_run.hour, minute=morning_run.minute,
                                      second=morning_run.second, max_instances=1, args=[CIRCUITS[i]])
 
@@ -104,7 +130,7 @@ if __name__ == '__main__':
                                      second=night_run.second, max_instances=1, args=[CIRCUITS[i]])
 
         night_run = night_run + timedelta(minutes=MINUTES_NIGHT[i], seconds=1)
-        #night_run = night_run + timedelta(seconds=MINUTES_NIGHT[i]+1)
+        # night_run = night_run + timedelta(seconds=MINUTES_NIGHT[i]+1)
         background_scheduler.add_job(disable_valve, 'cron', hour=night_run.hour, minute=night_run.minute,
                                      second=night_run.second, max_instances=1, args=[CIRCUITS[i]])
 

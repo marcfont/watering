@@ -2,9 +2,14 @@ import time
 import datetime
 import RPi.GPIO as GPIO
 
+global count
+count = 0
 
-def sensorCallback(channel):
+
+def sensor_callback(channel):
     # Called if sensor output changes
+    global count
+    count = count + 1
     timestamp = time.time()
     stamp = datetime.datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
     if GPIO.input(channel):
@@ -23,7 +28,7 @@ def main():
 
     try:
         # Loop until users quits with CTRL-C
-        while True :
+        while True:
             time.sleep(0.1)
 
     except KeyboardInterrupt:
@@ -37,8 +42,8 @@ print("Setup GPIO pin as input on GPIO2")
 
 # Set Switch GPIO as input
 # Pull high by default
-GPIO.setup(13 , GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(13, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
+GPIO.setup(13, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.add_event_detect(13, GPIO.RISING, callback=sensor_callback)
 
 if __name__ == "__main__":
     main()
