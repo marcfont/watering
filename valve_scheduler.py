@@ -142,7 +142,10 @@ if __name__ == '__main__':
         background_scheduler.add_job(disable_valve, 'cron', hour=night_run.hour, minute=night_run.minute,
                                      second=night_run.second, max_instances=1, args=[CIRCUITS[i]])
 
-    send_email("Watering scheduled (program restart)", str(background_scheduler.print_jobs()))
+    send_email("Watering scheduled (program restart)", 'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
+               'START_TIME_NIGHT: ' + str(START_TIME_NIGHT) + '\n' +
+               'MINUTES_MORNING: ' + str(MINUTES_MORNING) + '\n' +
+               'MINUTES_NIGHT: ' + str(MINUTES_NIGHT))
 
     while True:
         pass
