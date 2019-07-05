@@ -18,10 +18,10 @@ CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit
 DELAY_BETWEEN_CIRCUITS = 5
 
 START_TIME_MORNING = time(6, 0, 0)
-START_TIME_NIGHT = time(21, 57, 0)
+START_TIME_NIGHT = time(22, 9, 0)
 
 MINUTES_MORNING = [20, 8, 20]
-MINUTES_NIGHT = [2, 1, 2]
+MINUTES_NIGHT = [8, 3, 8]
 
 flow_rising_count = 0
 real_start_time_s = None
@@ -73,7 +73,7 @@ def disable_valve(valve_id):
     print('flow_rising_count',flow_rising_count)
     print('flow_l_per_minute',flow_l_per_minute)
     volume = flow_l_per_minute * (pouring_time_s / 60)
-    print('volume,volume')
+    print('volume',volume)
 
     flow_rising_count = 0
 
