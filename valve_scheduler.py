@@ -18,10 +18,10 @@ CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit
 DELAY_BETWEEN_CIRCUITS = 5
 
 START_TIME_MORNING = time(6, 0, 0)
-START_TIME_NIGHT = time(22, 9, 0)
+START_TIME_NIGHT = time(22, 0, 0)
 
-MINUTES_MORNING = [20, 8, 20]
-MINUTES_NIGHT = [8, 3, 8]
+MINUTES_MORNING = [20, 5, 20]
+MINUTES_NIGHT = [8, 2, 8]
 
 flow_rising_count = 0
 real_start_time_s = None
@@ -93,7 +93,7 @@ def gpio_init():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
 
-    GPIO.setup(GPIO_2_FLOW_METER, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(GPIO_2_FLOW_METER, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
     GPIO.setup(GPIO_4_RIGHT, GPIO.OUT)
     GPIO.setup(GPIO_5_FAR, GPIO.OUT)
