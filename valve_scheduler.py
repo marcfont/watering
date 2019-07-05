@@ -18,9 +18,9 @@ CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit
 DELAY_BETWEEN_CIRCUITS = 5
 
 START_TIME_MORNING = time(6, 0, 0)
-START_TIME_NIGHT = time(22, 43, 0)
+START_TIME_NIGHT = time(21, 54, 0)
 
-MINUTES_MORNING = [10, 3, 10]
+MINUTES_MORNING = [20, 8, 20]
 MINUTES_NIGHT = [0, 0, 0]
 
 flow_rising_count = 0
@@ -49,11 +49,10 @@ def send_email(subject, body):
 
 def enable_valve(valve_id):
     logging.info("Enable valve in pin: " + str(valve_id))
-    logging.info("Now watering........")
     send_email("Enable", str(CIRCUIT_NAMES[valve_id]) + " has been enabled.")
 
     global real_start_time_s
-    real_start_time_s = datetime.utcnow()
+    real_start_time_s = datetime.now()
     GPIO.output(valve_id, GPIO.LOW)
     GPIO.add_event_detect(GPIO_2_FLOW_METER, GPIO.RISING, callback=sensor_callback)
 
@@ -63,12 +62,16 @@ def disable_valve(valve_id):
     GPIO.remove_event_detect(GPIO_2_FLOW_METER)
 
     global real_start_time_s
-    real_stop_time_s = datetime.utcnow()
+    real_stop_time_s = datetime.now()
     delta = real_stop_time_s - real_start_time_s
+    print('delta',delta)
     pouring_time_s = delta.seconds
+    print('pouring_time_s',pouring_time_s)
 
     global flow_rising_count
     flow_l_per_minute = (flow_rising_count / pouring_time_s) / 4.8
+    print('flow_rising_count',flow_rising_count)
+    print('flow_l_per_minute',flow_l_per_minute)
     volume = flow_l_per_minute * (pouring_time_s / 60)
 
     flow_rising_count = 0
@@ -76,7 +79,6 @@ def disable_valve(valve_id):
     send_email("Disable", str(CIRCUIT_NAMES[valve_id]) + " has been disabled.\nWatering volume has been "
                + str(round(volume)) + " liters.")
 
-    logging.info("..............and watering stops")
     logging.info("Disable valve in pin: " + str(valve_id))
     logging.info("Watering volume has been " + str(round(volume)) + " liters")
 
@@ -105,9 +107,9 @@ def gpio_init():
 if __name__ == '__main__':
     logging.basicConfig(filename='simple_watering.log', level=logging.INFO)
     # TODO: add boot timestamp
-    logging.info('---------------------------------------------')
-    logging.info('---------------system boot-------------------')
-    logging.info('---------------------------------------------')
+    logging.info('------------------------------------------------------------')
+    logging.info('------------------------System boot on: ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+    logging.info('------------------------------------------------------------')
 
     background_scheduler = BackgroundScheduler()
     background_scheduler.start()
