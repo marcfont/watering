@@ -9,8 +9,6 @@ import math
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 HEADER = {'x-api-key': 'yTLyU2J2XraoSZ4LEHpG35izWgS22AMs1DmRJqmZ'}
 
-EVAPO_NUM_DAYS_CALCULATION = 3
-
 
 def __meteocat_api_request(api_date, operation_id):
     """
@@ -70,11 +68,11 @@ def __meteocat_api_request(api_date, operation_id):
         print(ex)
 
 
-def __evapotranspiration_rain_day(num_days):
+def evapotranspiration_rain_day(start_day, num_days):
     """
     evapotranspiration calculation using meteo.cat api queries and FAO formula (see readme)
-    :param num_days: number of days to take into account for the calculation. Must be positive number. 1 means today,
-    2 means today and yesterday, and so forth
+    :param start_day: 0 means we start calculating from today, 1 from yesterday and so on
+    :param num_days: number of days to add up in the calculation. Must be positive number.
     :return: [evapotranspiration, rain (mm)]
     """
     if type(num_days) is not int:
@@ -86,7 +84,7 @@ def __evapotranspiration_rain_day(num_days):
     et0_out = rain_out = 0
 
     for j in range(num_days):
-        when = date.today() - timedelta(days=j)
+        when = date.today() - timedelta(days=start_day+j)
 
         [t_max, t_min] = __meteocat_api_request(when, 'temp')
         rain = __meteocat_api_request(when, 'rain')
@@ -115,9 +113,31 @@ def __evapotranspiration_rain_day(num_days):
     return [round(et0_out, 1), round(rain_out, 1)]
 
 
-def compute_watering_minutes():
-    return __evapotranspiration_rain_day(EVAPO_NUM_DAYS_CALCULATION)
+def minutes(start_day, num_days):
+    KJ = 0.6
+    EFFECTIVE_RAIN = 0.8
+    REAL_ETO_TO_MINUTES_SLOPE = 14
+    STRAWBERRY_TO_GRASS = 1/8
+    NIGHT_PORTION = 1/5
+    MORNING_PORTION = 4/5
+    MIN_ETO_REAL = 0.6 # Això són 8.4 minuts de gespa i 1.1 de maduixes
+
+    [eto, rain] = evapotranspiration_rain_day(start_day, num_days)
+    eto_real = eto * KJ - rain * EFFECTIVE_RAIN
+
+    if MIN_ETO_REAL >= 0.5:
+        grass_minutes = eto_real * REAL_ETO_TO_MINUTES_SLOPE
+        strawberry_minutes = grass_minutes * STRAWBERRY_TO_GRASS
+
+        morning = [round(grass_minutes * MORNING_PORTION / 2), round(strawberry_minutes * MORNING_PORTION),
+                   round(grass_minutes * MORNING_PORTION / 2)]
+        night = [round(grass_minutes * NIGHT_PORTION / 2), round(strawberry_minutes * NIGHT_PORTION),
+                 round(grass_minutes * NIGHT_PORTION / 2)]
+
+        return [morning, night]
+    else:
+        return [[0, 0, 0], [0, 0, 0]]
 
 
 if __name__ == '__main__':
-    print(__evapotranspiration_rain_day(2))
+    print(evapotranspiration_rain_day(0, 1))

@@ -34,12 +34,20 @@ https://ruralcat.gencat.cat/web/guest/eines-sub
 Read first:
 https://www.hydropoint.com/what-is-evapotranspiration/
 
-ET0 real (mm equivalent a l/m2) = Kj * ET0 teòrica
-Kj del jardí = 60%
+Kj = coeficient de jardí per la zona de la gespa = 60%
+ET0 jardí (mm equivalent a l/m2) = Kj * ET0 de referència (meteocat)
+Precipitació efectiva (mm equivalent a l/m2) = 80% de la pluja real
+Necessitat hídrica (l/m2) = ETO real = ETO jardí - Precipitació efectiva
 
-Pluja efectiva (mm equivalent a l/m2) = 75% de la pluja real
+Sabent que en dies de calor extrema la ETO real era de 4 i regant 56 minuts 
+la gespa estava bé (8+8 a la nit i 40+40 a l'alba) derivem la funció:
+minuts_gespa = ETO real * 14
+minuts_maduixers = minuts_gespa / 8
+planificació de minuts amb [dreta, maduixers, esquerra]
+nit = [minuts_gespa/5/2, minuts_maduixers/5, minuts_gespa/5/2]
+alba = [minuts_gespa*4/5/2, minuts_maduixers*4/5, minuts_gespa*4/5/2]
 
-Necessitat hídrica (l/m2) = ET0 real - Pluja efectiva
+
 
 Superfície de gespa = 96m2
 Superfície de maduixers = 6m2
