@@ -5,8 +5,10 @@ import smtplib
 import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import minutes
 import RPi.GPIO as GPIO
 
+from minutes import minutes
 
 GPIO_2_FLOW_METER = 13
 GPIO_4_RIGHT = 16
@@ -19,9 +21,6 @@ DELAY_BETWEEN_CIRCUITS = 5
 
 START_TIME_MORNING = time(6, 0, 0)
 START_TIME_NIGHT = time(22, 0, 0)
-
-MINUTES_MORNING = [20, 5, 20]
-MINUTES_NIGHT = [8, 2, 8]
 
 flow_rising_count = 0
 real_start_time_s = None
@@ -105,9 +104,42 @@ def gpio_init():
     GPIO.output(GPIO_6_LEFT, GPIO.HIGH)
 
 
+def schedule_morning_run(run_time):
+    # Morning run takes into account today and yesterday
+    [minutes_morning, dummy] = minutes(0, 2)
+
+    send_email("Watering morning run scheduled: ",
+               'START_TIME_MORNING: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
+               'MINUTES_MORNING: ' + str(minutes_morning))
+
+    if minutes_morning != [0, 0, 0]:
+        for i in range(0, len(CIRCUITS)):
+            run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
+            background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
+
+            run_time = run_time + timedelta(minutes=minutes_morning[i], seconds=DELAY_BETWEEN_CIRCUITS)
+            background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
+
+
+def schedule_night_run (run_time):
+    # Night run takes into account just today
+    [dummy, minutes_night] = minutes(0, 1)
+
+    send_email("Watering night run scheduled: ",
+               'START_TIME_NIGHT: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
+               'MINUTES_NIGHT: ' + str(minutes_night))
+
+    if minutes_night != [0, 0, 0]:
+        for i in range(0, len(CIRCUITS)):
+            run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
+            background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
+
+            run_time = run_time + timedelta(minutes=minutes_night[i], seconds=DELAY_BETWEEN_CIRCUITS)
+            background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
+
+
 if __name__ == '__main__':
     logging.basicConfig(filename='simple_watering.log', level=logging.INFO)
-    # TODO: add boot timestamp
     logging.info('------------------------------------------------------------')
     logging.info('------------------------System boot on: ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
     logging.info('------------------------------------------------------------')
@@ -122,30 +154,14 @@ if __name__ == '__main__':
     night_run = datetime.now().replace(hour=START_TIME_NIGHT.hour, minute=START_TIME_NIGHT.minute,
                                        second=START_TIME_NIGHT.second)
 
-    for i in range(0, len(CIRCUITS)):
-        # TODO: controlar si minuts == 0 que no faci res
-        # run once a day at START_TIME_MORNING + DELAY_BETWEEN_CIRCUITS seconds for MINUTES_MORNING[i] minutes
-        morning_run = morning_run + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
-        background_scheduler.add_job(enable_valve, 'cron', hour=morning_run.hour, minute=morning_run.minute,
-                                     second=morning_run.second, max_instances=1, args=[CIRCUITS[i]])
+    background_scheduler.add_job(schedule_morning_run, 'cron', hour=morning_run.hour, minute=morning_run.minute,
+                                 second=morning_run.second, max_instances=1, args=[morning_run])
+    background_scheduler.add_job(schedule_night_run, 'cron', hour=night_run.hour, minute=night_run.minute,
+                                 second=night_run.second, max_instances=1, args=[night_run])
 
-        morning_run = morning_run + timedelta(minutes=MINUTES_MORNING[i], seconds=DELAY_BETWEEN_CIRCUITS)
-        background_scheduler.add_job(disable_valve, 'cron', hour=morning_run.hour, minute=morning_run.minute,
-                                     second=morning_run.second, max_instances=1, args=[CIRCUITS[i]])
-
-        # run once a day at START_TIME_NIGHT + DELAY_BETWEEN_CIRCUITS seconds for MINUTES_NIGHT[i] minutes
-        night_run = night_run + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
-        background_scheduler.add_job(enable_valve, 'cron', hour=night_run.hour, minute=night_run.minute,
-                                     second=night_run.second, max_instances=1, args=[CIRCUITS[i]])
-
-        night_run = night_run + timedelta(minutes=MINUTES_NIGHT[i], seconds=DELAY_BETWEEN_CIRCUITS)
-        background_scheduler.add_job(disable_valve, 'cron', hour=night_run.hour, minute=night_run.minute,
-                                     second=night_run.second, max_instances=1, args=[CIRCUITS[i]])
-
-    send_email("Watering scheduled (program restart)", 'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
-               'START_TIME_NIGHT: ' + str(START_TIME_NIGHT) + '\n' +
-               'MINUTES_MORNING: ' + str(MINUTES_MORNING) + '\n' +
-               'MINUTES_NIGHT: ' + str(MINUTES_NIGHT))
+    send_email("Watering calculation scheduled (program restart)",
+               'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
+               'START_TIME_NIGHT: ' + str(START_TIME_NIGHT))
 
     while True:
         pass
