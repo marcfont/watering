@@ -19,8 +19,8 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 DELAY_BETWEEN_CIRCUITS = 5
 
-START_TIME_MORNING = time(17, 23, 0)
-START_TIME_NIGHT = time(17, 30, 0)
+START_TIME_MORNING = time(17, 36, 0)
+START_TIME_NIGHT = time(17, 46, 0)
 
 MINUTES_MORNING = [20, 5, 20]
 MINUTES_NIGHT = [8, 2, 8]
@@ -110,6 +110,7 @@ def gpio_init():
 def schedule_morning_run(run_time):
     # Morning run takes into account today and yesterday
     [minutes_morning, dummy] = minutes(0, 2)
+    run_time = datetime.fromisoformat(run_time)
 
     send_email("Watering morning run scheduled: ",
                'START_TIME_MORNING: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
@@ -126,6 +127,7 @@ def schedule_morning_run(run_time):
 def schedule_night_run (run_time):
     # Night run takes into account just today
     [dummy, minutes_night] = minutes(0, 1)
+    run_time = datetime.fromisoformat(run_time)
 
     send_email("Watering night run scheduled: ",
                'START_TIME_NIGHT: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
@@ -157,10 +159,10 @@ if __name__ == '__main__':
 
     background_scheduler.add_job(schedule_morning_run, 'cron', hour=morning_run.hour, minute=morning_run.minute,
                                  second=morning_run.second, max_instances=1, id='schedule_morning_run',
-                                 args=morning_run)
+                                 args=morning_run.isoformat())
     background_scheduler.add_job(schedule_night_run, 'cron', hour=night_run.hour, minute=night_run.minute,
                                  second=night_run.second, max_instances=1, id='schedule_night_run',
-                                 args=night_run)
+                                 args=str(night_run.isoformat))
 
     send_email("Watering calculation scheduled (program restart)",
                'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
