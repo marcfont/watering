@@ -125,7 +125,7 @@ def minutes(start_day, num_days):
     [eto, rain] = evapotranspiration_rain_day(start_day, num_days)
     eto_real = eto * KJ - rain * EFFECTIVE_RAIN
 
-    if MIN_ETO_REAL >= 0.5:
+    if eto_real >= MIN_ETO_REAL:
         grass_minutes = eto_real * REAL_ETO_TO_MINUTES_SLOPE
         strawberry_minutes = grass_minutes * STRAWBERRY_TO_GRASS
 

@@ -19,8 +19,8 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 DELAY_BETWEEN_CIRCUITS = 5
 
-START_TIME_MORNING = time(18, 5, 0)
-START_TIME_NIGHT = time(18, 15, 0)
+START_TIME_MORNING = time(18, 9, 0)
+START_TIME_NIGHT = time(18, 19, 0)
 
 MINUTES_MORNING = [20, 5, 20]
 MINUTES_NIGHT = [8, 2, 8]
@@ -117,10 +117,10 @@ def schedule_morning_run(run_time):
 
     for i in range(0, len(CIRCUITS)):
         run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
-        background_scheduler.add_job(enable_valve, 'date', run_date=run_time, max_instances=1, args=[CIRCUITS[i]])
+        background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
         run_time = run_time + timedelta(minutes=minutes_morning[i], seconds=DELAY_BETWEEN_CIRCUITS)
-        background_scheduler.add_job(disable_valve, 'date', run_date=run_time, max_instances=1, args=[CIRCUITS[i]])
+        background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
 
 def schedule_night_run (run_time):
@@ -133,10 +133,10 @@ def schedule_night_run (run_time):
 
     for i in range(0, len(CIRCUITS)):
         run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
-        background_scheduler.add_job(enable_valve, 'date', run_date=run_time, max_instances=1, args=[CIRCUITS[i]])
+        background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
         run_time = run_time + timedelta(minutes=minutes_night[i], seconds=DELAY_BETWEEN_CIRCUITS)
-        background_scheduler.add_job(disable_valve, 'date', run_date=run_time, max_instances=1, args=[CIRCUITS[i]])
+        background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
 
 if __name__ == '__main__':
