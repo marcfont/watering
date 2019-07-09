@@ -19,11 +19,8 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 DELAY_BETWEEN_CIRCUITS = 5
 
-START_TIME_MORNING = time(18, 9, 0)
-START_TIME_NIGHT = time(18, 19, 0)
-
-MINUTES_MORNING = [20, 5, 20]
-MINUTES_NIGHT = [8, 2, 8]
+START_TIME_MORNING = time(6, 0, 0)
+START_TIME_NIGHT = time(22, 0, 0)
 
 flow_rising_count = 0
 real_start_time_s = None
@@ -55,7 +52,7 @@ def enable_valve(valve_id):
 
     global real_start_time_s
     real_start_time_s = datetime.now()
-    #GPIO.output(valve_id, GPIO.LOW)
+    GPIO.output(valve_id, GPIO.LOW)
     GPIO.add_event_detect(GPIO_2_FLOW_METER, GPIO.RISING, callback=sensor_callback)
 
 
@@ -115,12 +112,13 @@ def schedule_morning_run(run_time):
                'START_TIME_MORNING: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
                'MINUTES_MORNING: ' + str(minutes_morning))
 
-    for i in range(0, len(CIRCUITS)):
-        run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
-        background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
+    if minutes_morning != [0, 0, 0]:
+        for i in range(0, len(CIRCUITS)):
+            run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
+            background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
-        run_time = run_time + timedelta(minutes=minutes_morning[i], seconds=DELAY_BETWEEN_CIRCUITS)
-        background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
+            run_time = run_time + timedelta(minutes=minutes_morning[i], seconds=DELAY_BETWEEN_CIRCUITS)
+            background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
 
 def schedule_night_run (run_time):
@@ -131,12 +129,13 @@ def schedule_night_run (run_time):
                'START_TIME_NIGHT: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
                'MINUTES_NIGHT: ' + str(minutes_night))
 
-    for i in range(0, len(CIRCUITS)):
-        run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
-        background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
+    if minutes_night != [0, 0, 0]:
+        for i in range(0, len(CIRCUITS)):
+            run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
+            background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
-        run_time = run_time + timedelta(minutes=minutes_night[i], seconds=DELAY_BETWEEN_CIRCUITS)
-        background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
+            run_time = run_time + timedelta(minutes=minutes_night[i], seconds=DELAY_BETWEEN_CIRCUITS)
+            background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
 
 if __name__ == '__main__':

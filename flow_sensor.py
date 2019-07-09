@@ -11,7 +11,7 @@ def sensor_callback(channel):
     global count
     count = count + 1
     timestamp = time.time()
-    stamp = datetime.datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
+    stamp = datetime.datetime.fromtimestamp(timestamp).strftime('%H:%M:%S.fffff')
     if GPIO.input(channel):
         # No magnet
         print("Sensor HIGH " + stamp)
@@ -29,7 +29,7 @@ def main():
     try:
         # Loop until users quits with CTRL-C
         while True:
-            time.sleep(0.1)
+            time.sleep(0.00000000001)
 
     except KeyboardInterrupt:
         # Reset GPIO settings
