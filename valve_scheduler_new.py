@@ -157,12 +157,10 @@ if __name__ == '__main__':
     night_run = datetime.now().replace(hour=START_TIME_NIGHT.hour, minute=START_TIME_NIGHT.minute,
                                        second=START_TIME_NIGHT.second)
 
-    background_scheduler.add_job(schedule_morning_run, 'cron', hour=morning_run.hour, minute=morning_run.minute,
-                                 second=morning_run.second, max_instances=1, args=morning_run.isoformat(),
-                                 id='schedule_morning_run')
-    background_scheduler.add_job(schedule_night_run, 'cron', hour=night_run.hour, minute=night_run.minute,
-                                 second=night_run.second, max_instances=1, args=str(night_run.isoformat),
-                                 id='schedule_night_run')
+    background_scheduler.add_job(schedule_morning_run, 'cron', args=morning_run.isoformat(), hour=morning_run.hour, minute=morning_run.minute,
+                                 second=morning_run.second, id='schedule_morning_run', max_instances=1)
+    background_scheduler.add_job(schedule_night_run, 'cron', args=str(night_run.isoformat), hour=night_run.hour, minute=night_run.minute,
+                                 second=night_run.second, id='schedule_night_run', max_instances=1)
 
     send_email("Watering calculation scheduled (program restart)",
                'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
