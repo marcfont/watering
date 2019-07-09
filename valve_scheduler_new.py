@@ -19,8 +19,8 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 DELAY_BETWEEN_CIRCUITS = 5
 
-START_TIME_MORNING = time(18, 2, 0)
-START_TIME_NIGHT = time(18, 12, 0)
+START_TIME_MORNING = time(18, 5, 0)
+START_TIME_NIGHT = time(18, 15, 0)
 
 MINUTES_MORNING = [20, 5, 20]
 MINUTES_NIGHT = [8, 2, 8]
@@ -110,7 +110,6 @@ def gpio_init():
 def schedule_morning_run(run_time):
     # Morning run takes into account today and yesterday
     [minutes_morning, dummy] = minutes(0, 2)
-    run_time = datetime.fromisoformat(run_time)
 
     send_email("Watering morning run scheduled: ",
                'START_TIME_MORNING: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
@@ -127,7 +126,6 @@ def schedule_morning_run(run_time):
 def schedule_night_run (run_time):
     # Night run takes into account just today
     [dummy, minutes_night] = minutes(0, 1)
-    run_time = datetime.fromisoformat(run_time)
 
     send_email("Watering night run scheduled: ",
                'START_TIME_NIGHT: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
@@ -158,15 +156,13 @@ if __name__ == '__main__':
                                        second=START_TIME_NIGHT.second)
 
     background_scheduler.add_job(schedule_morning_run, 'cron', hour=morning_run.hour, minute=morning_run.minute,
-                                 second=morning_run.second, max_instances=1, args=[morning_run.isoformat()])
+                                 second=morning_run.second, max_instances=1, args=[morning_run])
     background_scheduler.add_job(schedule_night_run, 'cron', hour=night_run.hour, minute=night_run.minute,
-                                 second=night_run.second, max_instances=1, args=[night_run.isoformat()])
+                                 second=night_run.second, max_instances=1, args=[night_run])
 
     send_email("Watering calculation scheduled (program restart)",
                'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
-               'START_TIME_NIGHT: ' + str(START_TIME_NIGHT) + '\n' +
-               'MINUTES_MORNING: ' + str(MINUTES_MORNING) + '\n' +
-               'MINUTES_NIGHT: ' + str(MINUTES_NIGHT))
+               'START_TIME_NIGHT: ' + str(START_TIME_NIGHT))
 
     while True:
         pass
