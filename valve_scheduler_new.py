@@ -108,6 +108,7 @@ def gpio_init():
 
 
 def schedule_morning_run(run_time):
+    # Morning run takes into account today and yesterday
     [minutes_morning, dummy] = minutes(0, 2)
 
     send_email("Watering morning run scheduled: ",
@@ -123,6 +124,7 @@ def schedule_morning_run(run_time):
 
 
 def schedule_night_run (run_time):
+    # Night run takes into account just today
     [dummy, minutes_night] = minutes(0, 1)
 
     send_email("Watering night run scheduled: ",
