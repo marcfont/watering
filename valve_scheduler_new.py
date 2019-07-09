@@ -19,8 +19,8 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 DELAY_BETWEEN_CIRCUITS = 5
 
-START_TIME_MORNING = time(17, 58, 0)
-START_TIME_NIGHT = time(18, 8, 0)
+START_TIME_MORNING = time(17, 59, 0)
+START_TIME_NIGHT = time(18, 9, 0)
 
 MINUTES_MORNING = [20, 5, 20]
 MINUTES_NIGHT = [8, 2, 8]
@@ -158,9 +158,9 @@ if __name__ == '__main__':
                                        second=START_TIME_NIGHT.second)
 
     background_scheduler.add_job(schedule_morning_run, 'cron', hour=morning_run.hour, minute=morning_run.minute,
-                                 second=morning_run.second, max_instances=1, args=morning_run.isoformat(),)
+                                 second=morning_run.second, max_instances=1, args=morning_run.isoformat())
     background_scheduler.add_job(schedule_night_run, 'cron', hour=night_run.hour, minute=night_run.minute,
-                                 second=night_run.second, max_instances=1, args=str(night_run.isoformat),)
+                                 second=night_run.second, max_instances=1, args=night_run.isoformat())
 
     send_email("Watering calculation scheduled (program restart)",
                'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
