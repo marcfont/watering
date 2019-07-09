@@ -55,7 +55,7 @@ def enable_valve(valve_id):
 
     global real_start_time_s
     real_start_time_s = datetime.now()
-    GPIO.output(valve_id, GPIO.LOW)
+    #GPIO.output(valve_id, GPIO.LOW)
     GPIO.add_event_detect(GPIO_2_FLOW_METER, GPIO.RISING, callback=sensor_callback)
 
 
