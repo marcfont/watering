@@ -1,6 +1,5 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime, date, timedelta
-import time
+from datetime import datetime, date, timedelta, time
 import logging
 import smtplib
 import requests
