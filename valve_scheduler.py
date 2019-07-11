@@ -1,6 +1,6 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-import datetime
-import time
+from datetime import date, time, timedelta, datetime
+import time as t
 import logging
 import smtplib
 import requests
@@ -26,8 +26,8 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 DELAY_BETWEEN_CIRCUITS = 5
 
-START_TIME_MORNING = datetime.time(6, 0, 0)
-START_TIME_NIGHT = datetime.time(22, 0, 0)
+START_TIME_MORNING = time(6, 0, 0)
+START_TIME_NIGHT = time(22, 0, 0)
 
 flow_rising_count = 0
 real_start_time_s = None
@@ -45,7 +45,7 @@ def __meteocat_api_request(api_date, operation_id):
     """
     operations = {'temp': '32', 'rain': '35', 'rh': '33', 'rad': '36', 'wind': '30'}
 
-    if type(api_date) is not datetime.date:
+    if type(api_date) is not date:
         raise TypeError('First parameter must be datetime.dat, not %s' % type(api_date))
     if not operations.__contains__(operation_id):
         raise TypeError('Second parameter has unaccepted value %s' % operation_id)
@@ -98,7 +98,7 @@ def print_evapotranspiration_rain_particular_days():
     :return: [evapotranspiration, rain (mm)]
     """
 
-    when = datetime.date.today()
+    when = date.today()
 
     #for j in range(, 11):
     when = when.replace(2019, 7, 10)
@@ -141,7 +141,7 @@ def evapotranspiration_rain_day(start_day, num_days):
     et0_out = rain_out = 0
 
     for j in range(num_days):
-        when = datetime.date.today() - datetime.timedelta(days=start_day+j)
+        when = date.today() - timedelta(days=start_day+j)
 
         [t_max, t_min] = __meteocat_api_request(when, 'temp')
         rain = __meteocat_api_request(when, 'rain')
@@ -282,10 +282,10 @@ def schedule_morning_run(run_time):
 
     if minutes_morning != [0, 0, 0]:
         for i in range(0, len(CIRCUITS)):
-            run_time = run_time + datetime.timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
+            run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
             background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
-            run_time = run_time + datetime.timedelta(minutes=minutes_morning[i], seconds=DELAY_BETWEEN_CIRCUITS)
+            run_time = run_time + timedelta(minutes=minutes_morning[i], seconds=DELAY_BETWEEN_CIRCUITS)
             background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
 
@@ -299,10 +299,10 @@ def schedule_night_run (run_time):
 
     if minutes_night != [0, 0, 0]:
         for i in range(0, len(CIRCUITS)):
-            run_time = run_time + datetime.timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
+            run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
             background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
-            run_time = run_time + datetime.timedelta(minutes=minutes_night[i], seconds=DELAY_BETWEEN_CIRCUITS)
+            run_time = run_time + timedelta(minutes=minutes_night[i], seconds=DELAY_BETWEEN_CIRCUITS)
             background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
 
@@ -333,7 +333,7 @@ if __name__ == '__main__':
                    'START_TIME_NIGHT: ' + str(START_TIME_NIGHT))
 
         while True:
-            time.sleep(1000)
+            t.sleep(1000)
 
     except Exception as error:
         logging.error('Error in __main__: ' + repr(error))
