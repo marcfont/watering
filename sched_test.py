@@ -72,4 +72,4 @@ if __name__ == '__main__':
                                  second=night_run_2.second, max_instances=1)
 
     while True:
-        time.sleep(1000)
+        pass
