@@ -25,7 +25,7 @@ def schedule_morning_run():
 
     run_time = datetime.now()
 
-    for i in range(1, 4):
+    for i in range(0, 3):
         run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
         background_scheduler.add_job(enable_valve, 'date', run_date=run_time)
 
@@ -40,7 +40,7 @@ def schedule_night_run():
 
     run_time = datetime.now()
 
-    for i in range(1, 4):
+    for i in range(0, 3):
         run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
         background_scheduler.add_job(enable_valve, 'date', run_date=run_time)
 
