@@ -1,11 +1,11 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, time, timedelta
 
-START_TIME_MORNING = time(13, 26, 0)
-START_TIME_NIGHT = time(13, 28, 0)
+START_TIME_MORNING = time(13, 30, 0)
+START_TIME_NIGHT = time(13, 32, 0)
 
-START_TIME_MORNING_2 = time(13, 30, 0)
-START_TIME_NIGHT_2 = time(13, 32, 0)
+START_TIME_MORNING_2 = time(13, 34, 0)
+START_TIME_NIGHT_2 = time(13, 36, 0)
 
 DELAY_BETWEEN_CIRCUITS = 3
 
@@ -44,7 +44,7 @@ def schedule_night_run():
         run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
         background_scheduler.add_job(enable_valve, 'date', run_date=run_time)
 
-        run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS + seconds_second)
+        run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS + seconds_second[i])
         background_scheduler.add_job(disable_valve, 'date', run_date=run_time)
 
 
