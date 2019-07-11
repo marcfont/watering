@@ -58,14 +58,14 @@ def __meteocat_api_request(api_date, operation_id):
                 return statistics.mean(values)
         else:
             # todo: error handling
-            print(r)
+            logging.info('ERROR #1 in __meteocat_api_request')
 
     except ConnectionError as ex:
         print('Exception thrown: ConnectionError')
-        print(ex)
+        logging.info('ERROR #1 in __meteocat_api_request', ex)
     except requests.exceptions.RequestException as ex:
         print('Exception thrown: requests.exceptions.RequestException')
-        print(ex)
+        logging.info('ERROR #2 in __meteocat_api_request', ex)
 
 def print_evapotranspiration_rain_particular_days():
     """
@@ -113,8 +113,7 @@ def evapotranspiration_rain_day(start_day, num_days):
     if type(num_days) is not int:
         raise TypeError('First parameter must be int, not %s' % type(num_days))
     if num_days <= 0:
-        #todo: error handling
-        print("error")
+        raise TypeError('num_days <= 0 --> value %s' % eval(num_days))
 
     et0_out = rain_out = 0
 
