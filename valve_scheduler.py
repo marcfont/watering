@@ -81,14 +81,14 @@ def __meteocat_api_request(api_date, operation_id):
                 return statistics.mean(values)
         else:
             # todo: error handling
-            logging.info('ERROR #1 in __meteocat_api_request')
+            logging.error('ERROR #1 in __meteocat_api_request')
 
     except ConnectionError as ex:
         print('Exception thrown: ConnectionError')
-        logging.info('ERROR #1 in __meteocat_api_request', ex)
+        logging.error('ERROR #1 in __meteocat_api_request', ex)
     except requests.exceptions.RequestException as ex:
         print('Exception thrown: requests.exceptions.RequestException')
-        logging.info('ERROR #2 in __meteocat_api_request', ex)
+        logging.error('ERROR #2 in __meteocat_api_request', ex)
 
 def print_evapotranspiration_rain_particular_days():
     """
@@ -307,29 +307,34 @@ def schedule_night_run (run_time):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='simple_watering.log', level=logging.INFO)
-    logging.info('------------------------------------------------------------')
-    logging.info('------------------------System boot on: ' + datetime.now().strftime("%d/%m/%Y, %H:%M:%S"))
-    logging.info('------------------------------------------------------------')
+    try:
+        logging.basicConfig(filename='simple_watering.log', level=logging.INFO)
+        logging.info('------------------------------------------------------------')
+        logging.info('------------------------System boot on: ' + datetime.now().strftime("%d/%m/%Y, %H:%M:%S"))
+        logging.info('------------------------------------------------------------')
 
-    background_scheduler = BackgroundScheduler()
-    background_scheduler.start()
+        background_scheduler = BackgroundScheduler()
+        background_scheduler.start()
 
-    gpio_init()
+        gpio_init()
 
-    morning_run = datetime.now().replace(hour=START_TIME_MORNING.hour, minute=START_TIME_MORNING.minute,
-                                         second=START_TIME_MORNING.second)
-    night_run = datetime.now().replace(hour=START_TIME_NIGHT.hour, minute=START_TIME_NIGHT.minute,
-                                       second=START_TIME_NIGHT.second)
+        morning_run = datetime.now().replace(hour=START_TIME_MORNING.hour, minute=START_TIME_MORNING.minute,
+                                             second=START_TIME_MORNING.second)
+        night_run = datetime.now().replace(hour=START_TIME_NIGHT.hour, minute=START_TIME_NIGHT.minute,
+                                           second=START_TIME_NIGHT.second)
 
-    background_scheduler.add_job(schedule_morning_run, 'cron', hour=morning_run.hour, minute=morning_run.minute,
-                                 second=morning_run.second, max_instances=1, args=[morning_run])
-    background_scheduler.add_job(schedule_night_run, 'cron', hour=night_run.hour, minute=night_run.minute,
-                                 second=night_run.second, max_instances=1, args=[night_run])
+        background_scheduler.add_job(schedule_morning_run, 'cron', hour=morning_run.hour, minute=morning_run.minute,
+                                     second=morning_run.second, max_instances=1, args=[morning_run])
+        background_scheduler.add_job(schedule_night_run, 'cron', hour=night_run.hour, minute=night_run.minute,
+                                     second=night_run.second, max_instances=1, args=[night_run])
 
-    send_email("Watering calculation scheduled (program restart)",
-               'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
-               'START_TIME_NIGHT: ' + str(START_TIME_NIGHT))
+        send_email("Watering calculation scheduled (program restart)",
+                   'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
+                   'START_TIME_NIGHT: ' + str(START_TIME_NIGHT))
 
-    while True:
-        time.sleep(1000)
+        while True:
+            time.sleep(1000)
+
+    except Exception as error:
+        logging.error('Error in __main__: ' + repr(error))
+        send_email("Genaral failure", 'Error in __main__: ' + repr(error))
