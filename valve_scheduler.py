@@ -164,4 +164,4 @@ if __name__ == '__main__':
                'START_TIME_NIGHT: ' + str(START_TIME_NIGHT))
 
     while True:
-        pass
+        time.sleep(1000)
