@@ -42,6 +42,7 @@ Necessitat hídrica (l/m2) = ETO real = ETO jardí - Precipitació efectiva
 Sabent que en dies de calor extrema la ETO real era de 4 i regant 56 minuts 
 la gespa estava bé (8+8 a la nit i 40+40 a l'alba) derivem la funció:
 minuts_gespa = ETO real * 14
+14 modificat a 13 perquè era massa (van sortir fongs)
 minuts_maduixers = minuts_gespa / 8
 planificació de minuts amb [dreta, maduixers, esquerra]
 nit = [minuts_gespa/5/2, minuts_maduixers/5, minuts_gespa/5/2]

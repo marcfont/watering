@@ -173,7 +173,7 @@ def evapotranspiration_rain_day(start_day, num_days):
 def minutes(start_day, num_days):
     KJ = 0.6
     EFFECTIVE_RAIN = 0.8
-    REAL_ETO_TO_MINUTES_SLOPE = 14
+    REAL_ETO_TO_MINUTES_SLOPE = 13
     STRAWBERRY_TO_GRASS = 1/8
     NIGHT_PORTION = 1/5
     MORNING_PORTION = 4/5
@@ -194,6 +194,7 @@ def minutes(start_day, num_days):
         return [morning, night]
     else:
         return [[0, 0, 0], [0, 0, 0]]
+
 
 def send_email(subject, body):
     port = 465  # For SSL
