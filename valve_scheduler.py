@@ -26,7 +26,7 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 DELAY_BETWEEN_CIRCUITS = 5
 
-START_TIME_MORNING = time(12, 32, 0)
+START_TIME_MORNING = time(12, 35, 0)
 START_TIME_NIGHT = time(22, 0, 0)
 
 flow_rising_count = 0
@@ -275,7 +275,7 @@ def schedule_morning_run(run_time):
     send_email('Watering morning run scheduled: ',
                'START_TIME_MORNING: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
                'MINUTES_MORNING: ' + str(minutes_morning))
-    send_email('Watering morning run scheduled: ' +
+    logging.info('Watering morning run scheduled: ' +
                'START_TIME_MORNING: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
                'MINUTES_MORNING: ' + str(minutes_morning))
 
