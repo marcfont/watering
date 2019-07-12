@@ -167,7 +167,7 @@ def evapotranspiration_rain_day(start_day, num_days):
         et0_out = et0_out + et0
         rain_out = rain_out + rain
 
-    return [round(et0_out, 1), round(rain_out, 1)]
+    return [round(et0_out / num_days, 1), round(rain_out / num_days, 1)]
 
 
 def minutes(start_day, num_days):
