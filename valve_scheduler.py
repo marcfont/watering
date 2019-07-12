@@ -26,7 +26,7 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 DELAY_BETWEEN_CIRCUITS = 5
 
-START_TIME_MORNING = time(6, 0, 0)
+START_TIME_MORNING = time(12, 32, 0)
 START_TIME_NIGHT = time(22, 0, 0)
 
 flow_rising_count = 0
@@ -234,15 +234,10 @@ def disable_valve(valve_id):
     real_stop_time_s = datetime.now()
     delta = real_stop_time_s - real_start_time_s
     pouring_time_s = delta.seconds
-    logging.info('pouring_time_s', pouring_time_s)
 
     global flow_rising_count
     flow_l_per_minute = (flow_rising_count / pouring_time_s) / 4.8
-    logging.info('flow_rising_count', flow_rising_count)
-    logging.info('flow_l_per_minute', flow_l_per_minute)
     volume = flow_l_per_minute * (pouring_time_s / 60)
-    logging.info('volume', volume)
-
     flow_rising_count = 0
 
     send_email("Disable", str(CIRCUIT_NAMES[valve_id]) + " has been disabled.\nWatering volume has been "
@@ -277,7 +272,10 @@ def schedule_morning_run(run_time):
     # Morning run takes into account today and yesterday
     [minutes_morning, dummy] = minutes(0, 2)
 
-    send_email("Watering morning run scheduled: ",
+    send_email('Watering morning run scheduled: ',
+               'START_TIME_MORNING: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
+               'MINUTES_MORNING: ' + str(minutes_morning))
+    send_email('Watering morning run scheduled: ' +
                'START_TIME_MORNING: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
                'MINUTES_MORNING: ' + str(minutes_morning))
 
@@ -294,9 +292,12 @@ def schedule_night_run (run_time):
     # Night run takes into account just today
     [dummy, minutes_night] = minutes(0, 1)
 
-    send_email("Watering night run scheduled: ",
+    send_email('Watering night run scheduled: ',
                'START_TIME_NIGHT: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
                'MINUTES_NIGHT: ' + str(minutes_night))
+    logging.info('Watering night run scheduled: ' +
+                 'START_TIME_NIGHT: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
+                 'MINUTES_NIGHT: ' + str(minutes_night))
 
     if minutes_night != [0, 0, 0]:
         for i in range(0, len(CIRCUITS)):
