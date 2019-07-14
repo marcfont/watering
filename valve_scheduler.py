@@ -67,8 +67,8 @@ def __meteocat_api_request(api_date, operation_id):
             data = json.loads(r.text)
             values = []
 
-            for d in data["lectures"]:
-                values.append(d["valor"])
+            for d in data['lectures']:
+                values.append(d['valor'])
 
             if operation_id == 'temp' or operation_id == 'rh':
                 return [max(values), min(values)]
@@ -81,24 +81,17 @@ def __meteocat_api_request(api_date, operation_id):
                 return statistics.mean(values)
         else:
             # todo: error handling
-            logging.error('ERROR #1 in __meteocat_api_request')
+            logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'ERROR #1 in __meteocat_api_request')
 
     except Exception as ex:
-        logging.error('Error in enable_valve: ' + repr(ex))
-        send_email("General failure", 'Error in enable_valve: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Error in enable_valve: ' + repr(ex))
+        send_email('General failure', 'Error in enable_valve: ' + repr(ex))
         
 
 def print_evapotranspiration_rain_particular_days():
-    """
-    evapotranspiration calculation using meteo.cat api queries and FAO formula (see readme)
-    :param start_day: 0 means we start calculating from today, 1 from yesterday and so on
-    :param num_days: number of days to add up in the calculation. Must be positive number.
-    :return: [evapotranspiration, rain (mm)]
-    """
-
     when = date.today()
 
-    #for j in range(1, 11):
+    # for j in range(1, 11):
     when = when.replace(2019, 7, 10)
     [t_max, t_min] = __meteocat_api_request(when, 'temp')
     rain = __meteocat_api_request(when, 'rain')
@@ -170,8 +163,8 @@ def evapotranspiration_rain_day(start_day, num_days):
         return [round(et0_out / num_days, 1), round(rain_out / num_days, 1)]
 
     except Exception as ex:
-        logging.error('Error in enable_valve: ' + repr(ex))
-        send_email("General failure", 'Error in enable_valve: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Error in enable_valve: ' + repr(ex))
+        send_email('General failure', 'Error in enable_valve: ' + repr(ex))
 
 
 def minutes(start_day, num_days):
@@ -201,23 +194,23 @@ def minutes(start_day, num_days):
             return [[0, 0, 0], [0, 0, 0]]
 
     except Exception as ex:
-        logging.error('Error in enable_valve: ' + repr(ex))
-        send_email("General failure", 'Error in enable_valve: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Error in enable_valve: ' + repr(ex))
+        send_email('General failure', 'Error in enable_valve: ' + repr(ex))
 
 
 def send_email(subject, body):
     try:
         port = 465  # For SSL
-        smtp_server = "smtp.gmail.com"
-        sender_email = "watering.espona@gmail.com"  # Enter your address
-        receiver_email = "marc.font@gmail.com"  # Enter receiver address
-        password = "BeWaterMyFriend"
+        smtp_server = 'smtp.gmail.com'
+        sender_email = 'watering.espona@gmail.com'  # Enter your address
+        receiver_email = 'marc.font@gmail.com'  # Enter receiver address
+        password = 'BeWaterMyFriend'
 
         message = MIMEMultipart()
-        message["From"] = sender_email
-        message["To"] = receiver_email
-        message["Subject"] = subject
-        message.attach(MIMEText(body, "plain"))
+        message['From'] = sender_email
+        message['To'] = receiver_email
+        message['Subject'] = subject
+        message.attach(MIMEText(body, 'plain'))
         text = message.as_string()
 
         context = ssl.create_default_context()
@@ -226,14 +219,14 @@ def send_email(subject, body):
             server.sendmail(sender_email, receiver_email, text)
 
     except Exception as ex:
-        logging.error('Error in enable_valve: ' + repr(ex))
-        send_email("General failure", 'Error in enable_valve: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Error in enable_valve: ' + repr(ex))
+        send_email('General failure', 'Error in enable_valve: ' + repr(ex))
 
 
 def enable_valve(valve_id):
     try:
-        logging.info("Enable valve in pin: " + str(valve_id))
-        send_email("Enable", str(CIRCUIT_NAMES[valve_id]) + " has been enabled.")
+        logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Enable valve in pin: ' + str(valve_id))
+        send_email('Enable', str(CIRCUIT_NAMES[valve_id]) + ' has been enabled.')
 
         global real_start_time_s
         real_start_time_s = datetime.now()
@@ -241,8 +234,8 @@ def enable_valve(valve_id):
         GPIO.add_event_detect(GPIO_2_FLOW_METER, GPIO.RISING, callback=sensor_callback)
 
     except Exception as ex:
-        logging.error('Error in enable_valve: ' + repr(ex))
-        send_email("General failure", 'Error in enable_valve: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Error in enable_valve: ' + repr(ex))
+        send_email('General failure', 'Error in enable_valve: ' + repr(ex))
 
 
 def disable_valve(valve_id):
@@ -260,15 +253,15 @@ def disable_valve(valve_id):
         volume = flow_l_per_minute * (pouring_time_s / 60)
         flow_rising_count = 0
 
-        send_email("Disable", str(CIRCUIT_NAMES[valve_id]) + " has been disabled.\nWatering volume has been "
-                   + str(round(volume)) + " liters.")
+        send_email('Disable', str(CIRCUIT_NAMES[valve_id]) + ' has been disabled.\nWatering volume has been '
+                   + str(round(volume)) + ' liters.')
 
-        logging.info("Disable valve in pin: " + str(valve_id))
-        logging.info("Watering volume has been " + str(round(volume)) + " liters")
+        logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Disable valve in pin: ' + str(valve_id))
+        logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Watering volume has been ' + str(round(volume)) + ' liters')
 
     except Exception as ex:
-        logging.error('Error in disable_valve: ' + repr(ex))
-        send_email("General failure", 'Error in disable_valve: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Error in disable_valve: ' + repr(ex))
+        send_email('General failure', 'Error in disable_valve: ' + repr(ex))
 
 
 def sensor_callback(channel):
@@ -293,8 +286,8 @@ def gpio_init():
         GPIO.output(GPIO_6_LEFT, GPIO.HIGH)
 
     except Exception as ex:
-        logging.error('Error in gpio_init: ' + repr(ex))
-        send_email("General failure", 'Error in gpio_init: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Error in gpio_init: ' + repr(ex))
+        send_email('General failure', 'Error in gpio_init: ' + repr(ex))
 
 
 def schedule_morning_run(run_time):
@@ -303,10 +296,10 @@ def schedule_morning_run(run_time):
         [minutes_morning, dummy] = minutes(0, 2)
 
         send_email('Watering morning run scheduled: ',
-                   'START_TIME_MORNING: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
+                   'START_TIME_MORNING: ' + datetime.now().strftime('%H:%M:%S') + '\n' +
                    'MINUTES_MORNING: ' + str(minutes_morning))
-        logging.info('Watering morning run scheduled: ' +
-                     'START_TIME_MORNING: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
+        logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Watering morning run scheduled: ' +
+                     'START_TIME_MORNING: ' + datetime.now().strftime('%H:%M:%S') + '\n' +
                      'MINUTES_MORNING: ' + str(minutes_morning))
 
         if minutes_morning != [0, 0, 0]:
@@ -318,8 +311,8 @@ def schedule_morning_run(run_time):
                 background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
     except Exception as ex:
-        logging.error('Error in schedule_morning_run: ' + repr(ex))
-        send_email("General failure", 'Error in schedule_morning_run: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Error in schedule_morning_run: ' + repr(ex))
+        send_email('General failure', 'Error in schedule_morning_run: ' + repr(ex))
 
 
 def schedule_night_run(run_time):
@@ -328,10 +321,10 @@ def schedule_night_run(run_time):
         [dummy, minutes_night] = minutes(0, 1)
 
         send_email('Watering night run scheduled: ',
-                   'START_TIME_NIGHT: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
+                   'START_TIME_NIGHT: ' + datetime.now().strftime('%H:%M:%S') + '\n' +
                    'MINUTES_NIGHT: ' + str(minutes_night))
-        logging.info('Watering night run scheduled: ' +
-                     'START_TIME_NIGHT: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
+        logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Watering night run scheduled: ' +
+                     'START_TIME_NIGHT: ' + datetime.now().strftime('%H:%M:%S') + '\n' +
                      'MINUTES_NIGHT: ' + str(minutes_night))
 
         if minutes_night != [0, 0, 0]:
@@ -343,19 +336,26 @@ def schedule_night_run(run_time):
                 background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
     except Exception as ex:
-        logging.error('Error in schedule_night_run: ' + repr(ex))
-        send_email("General failure", 'Error in schedule_night_run: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Error in schedule_night_run: ' + repr(ex))
+        send_email('General failure', 'Error in schedule_night_run: ' + repr(ex))
 
 
 if __name__ == '__main__':
     try:
         logging.basicConfig(filename='simple_watering.log', level=logging.INFO)
         logging.info('------------------------------------------------------------')
-        logging.info('------------------------System boot on: ' + datetime.now().strftime("%d/%m/%Y, %H:%M:%S"))
+        logging.info('------------------------System boot on: ' + datetime.now().strftime('%d/%m/%Y, %H:%M:%S'))
         logging.info('------------------------------------------------------------')
 
         background_scheduler = BackgroundScheduler()
         background_scheduler.start()
+
+        # Create a log file for all apscheduler events
+        aplogger = logging.getLogger('apscheduler')
+        aplogger.propagate = False
+        aplogger.setLevel(logging.INFO)
+        aphandler = logging.FileHandler('apscheduler.log')
+        aplogger.addHandler(aphandler)
 
         gpio_init()
 
@@ -369,7 +369,7 @@ if __name__ == '__main__':
         background_scheduler.add_job(schedule_night_run, 'cron', hour=night_run.hour, minute=night_run.minute,
                                      second=night_run.second, args=[night_run])
 
-        send_email("Watering calculation scheduled (program restart)",
+        send_email('Watering calculation scheduled (program restart)',
                    'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
                    'START_TIME_NIGHT: ' + str(START_TIME_NIGHT))
 
@@ -377,5 +377,5 @@ if __name__ == '__main__':
             t.sleep(1000)
 
     except Exception as ex:
-        logging.error('Error in __main__: ' + repr(ex))
-        send_email("General failure", 'Error in __main__: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + 'Error in __main__: ' + repr(ex))
+        send_email('General failure', 'Error in __main__: ' + repr(ex))
