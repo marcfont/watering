@@ -306,8 +306,8 @@ def schedule_morning_run(run_time):
                    'START_TIME_MORNING: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
                    'MINUTES_MORNING: ' + str(minutes_morning))
         logging.info('Watering morning run scheduled: ' +
-                   'START_TIME_MORNING: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
-                   'MINUTES_MORNING: ' + str(minutes_morning))
+                     'START_TIME_MORNING: ' + datetime.now().strftime("%H:%M:%S") + '\n' +
+                     'MINUTES_MORNING: ' + str(minutes_morning))
 
         if minutes_morning != [0, 0, 0]:
             for i in range(0, len(CIRCUITS)):
@@ -322,7 +322,7 @@ def schedule_morning_run(run_time):
         send_email("General failure", 'Error in schedule_morning_run: ' + repr(ex))
 
 
-def schedule_night_run (run_time):
+def schedule_night_run(run_time):
     try:
         # Night run takes into account just today
         [dummy, minutes_night] = minutes(0, 1)
@@ -365,9 +365,9 @@ if __name__ == '__main__':
                                            second=START_TIME_NIGHT.second)
 
         background_scheduler.add_job(schedule_morning_run, 'cron', hour=morning_run.hour, minute=morning_run.minute,
-                                     second=morning_run.second, max_instances=1, args=[morning_run])
+                                     second=morning_run.second, args=[morning_run])
         background_scheduler.add_job(schedule_night_run, 'cron', hour=night_run.hour, minute=night_run.minute,
-                                     second=night_run.second, max_instances=1, args=[night_run])
+                                     second=night_run.second, args=[night_run])
 
         send_email("Watering calculation scheduled (program restart)",
                    'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
