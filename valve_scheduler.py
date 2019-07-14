@@ -26,8 +26,8 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 DELAY_BETWEEN_CIRCUITS = 5
 
-START_TIME_MORNING = time(7, 57, 0)
-START_TIME_NIGHT = time(22, 38, 0)
+START_TIME_MORNING = time(6, 0, 0)
+START_TIME_NIGHT = time(22, 0, 0)
 
 flow_rising_count = 0
 real_start_time_s = None
