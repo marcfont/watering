@@ -26,7 +26,7 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 DELAY_BETWEEN_CIRCUITS = 5
 
-START_TIME_MORNING = time(6, 0, 0)
+START_TIME_MORNING = time(10, 16, 0)
 START_TIME_NIGHT = time(22, 0, 0)
 
 flow_rising_count = 0
@@ -290,7 +290,7 @@ def gpio_init():
         send_email('General failure', 'Error in gpio_init: ' + repr(ex))
 
 
-def schedule_morning_run(run_time):
+def schedule_morning_run():
     try:
         # Morning run takes into account today and yesterday
         [minutes_morning, dummy] = minutes(0, 2)
@@ -302,6 +302,7 @@ def schedule_morning_run(run_time):
                      'START_TIME_MORNING: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
                      'MINUTES_MORNING: ' + str(minutes_morning))
 
+        run_time = datetime.now()
         if minutes_morning != [0, 0, 0]:
             for i in range(0, len(CIRCUITS)):
                 run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
@@ -315,7 +316,7 @@ def schedule_morning_run(run_time):
         send_email('General failure', 'Error in schedule_morning_run: ' + repr(ex))
 
 
-def schedule_night_run(run_time):
+def schedule_night_run():
     try:
         # Night run takes into account just today
         [dummy, minutes_night] = minutes(0, 1)
@@ -327,6 +328,7 @@ def schedule_night_run(run_time):
                      'START_TIME_NIGHT: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
                      'MINUTES_NIGHT: ' + str(minutes_night))
 
+        run_time = datetime.now()
         if minutes_night != [0, 0, 0]:
             for i in range(0, len(CIRCUITS)):
                 run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
@@ -365,9 +367,9 @@ if __name__ == '__main__':
                                            second=START_TIME_NIGHT.second)
 
         background_scheduler.add_job(schedule_morning_run, 'cron', hour=morning_run.hour, minute=morning_run.minute,
-                                     second=morning_run.second, args=[morning_run])
+                                     second=morning_run.second)
         background_scheduler.add_job(schedule_night_run, 'cron', hour=night_run.hour, minute=night_run.minute,
-                                     second=night_run.second, args=[night_run])
+                                     second=night_run.second)
 
         send_email('Watering calculation scheduled (program restart)',
                    'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
