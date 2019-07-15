@@ -27,7 +27,7 @@ CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit
 DELAY_BETWEEN_CIRCUITS = 5
 
 START_TIME_MORNING = time(6, 0, 0)
-START_TIME_NIGHT = time(22, 11, 0)
+START_TIME_NIGHT = time(22, 14, 0)
 
 flow_rising_count = 0
 real_start_time_s = None
@@ -274,7 +274,7 @@ def gpio_init():
 def schedule_morning_run():
     try:
         # Morning run takes into account today and yesterday
-        [minutes_morning, dummy] = minutes('morning')
+        minutes_morning = minutes('morning')
 
         send_email('Watering morning running: ',
                    'START_TIME_MORNING: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
@@ -300,7 +300,7 @@ def schedule_morning_run():
 def schedule_night_run():
     try:
         # Night run takes into account just today
-        [dummy, minutes_night] = minutes('night')
+        minutes_night = minutes('night')
 
         send_email('Watering night running: ',
                    'START_TIME_NIGHT: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
