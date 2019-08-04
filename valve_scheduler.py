@@ -16,6 +16,8 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 HEADER = {'x-api-key': 'yTLyU2J2XraoSZ4LEHpG35izWgS22AMs1DmRJqmZ'}
 
+MORNING_RUN_ENABLED = True
+NIGHT_RUN_ENABLED = False
 
 GPIO_2_FLOW_METER = 13
 GPIO_4_RIGHT = 16
@@ -279,7 +281,7 @@ def schedule_morning_run():
         send_email('Watering morning running: ',
                    'START_TIME_MORNING: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
                    'MINUTES_MORNING: ' + str(minutes_morning))
-        logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering morning running: ' +
+        logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering morning running: \n' +
                      'START_TIME_MORNING: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
                      'MINUTES_MORNING: ' + str(minutes_morning))
 
@@ -305,7 +307,7 @@ def schedule_night_run():
         send_email('Watering night running: ',
                    'START_TIME_NIGHT: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
                    'MINUTES_NIGHT: ' + str(minutes_night))
-        logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering night running: ' +
+        logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering night running: \n' +
                      'START_TIME_NIGHT: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
                      'MINUTES_NIGHT: ' + str(minutes_night))
 
@@ -328,6 +330,10 @@ if __name__ == '__main__':
         logging.basicConfig(filename='simple_watering.log', level=logging.INFO)
         logging.info('------------------------------------------------------------')
         logging.info('------------------------System boot on: ' + datetime.now().strftime('%d/%m/%Y, %H:%M:%S'))
+        logging.info('------------------------MORNING_RUN_ENABLED: ' + str(MORNING_RUN_ENABLED))
+        logging.info('------------------------START_TIME_MORNING: ' + str(START_TIME_MORNING))
+        logging.info('------------------------NIGHT_RUN_ENABLED: ' + str(NIGHT_RUN_ENABLED))
+        logging.info('------------------------START_TIME_MORNING: ' + str(START_TIME_MORNING))
         logging.info('------------------------------------------------------------')
 
         background_scheduler = BackgroundScheduler()
@@ -347,14 +353,19 @@ if __name__ == '__main__':
         night_run = datetime.now().replace(hour=START_TIME_NIGHT.hour, minute=START_TIME_NIGHT.minute,
                                            second=START_TIME_NIGHT.second)
 
-        background_scheduler.add_job(schedule_morning_run, 'cron', hour=morning_run.hour, minute=morning_run.minute,
-                                     second=morning_run.second)
-        background_scheduler.add_job(schedule_night_run, 'cron', hour=night_run.hour, minute=night_run.minute,
-                                     second=night_run.second)
+        if MORNING_RUN_ENABLED:
+            background_scheduler.add_job(schedule_morning_run, 'cron', hour=morning_run.hour, minute=morning_run.minute,
+                                         second=morning_run.second)
+        if NIGHT_RUN_ENABLED:
+            background_scheduler.add_job(schedule_night_run, 'cron', hour=night_run.hour, minute=night_run.minute,
+                                         second=night_run.second)
 
         send_email('Watering calculation scheduled (program restart)',
+                   'MORNING_RUN_ENABLED: ' + str(MORNING_RUN_ENABLED) + '\n' +
                    'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
-                   'START_TIME_NIGHT: ' + str(START_TIME_NIGHT))
+                   'NIGHT_RUN_ENABLED: ' + str(NIGHT_RUN_ENABLED) + '\n' +
+                   'START_TIME_MORNING: ' + str(START_TIME_MORNING)
+                   )
 
         while True:
             t.sleep(1000)
