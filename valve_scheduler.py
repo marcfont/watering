@@ -333,7 +333,7 @@ if __name__ == '__main__':
         logging.info('------------------------MORNING_RUN_ENABLED: ' + str(MORNING_RUN_ENABLED))
         logging.info('------------------------START_TIME_MORNING: ' + str(START_TIME_MORNING))
         logging.info('------------------------NIGHT_RUN_ENABLED: ' + str(NIGHT_RUN_ENABLED))
-        logging.info('------------------------START_TIME_MORNING: ' + str(START_TIME_MORNING))
+        logging.info('------------------------START_TIME_NIGHT: ' + str(START_TIME_NIGHT))
         logging.info('------------------------------------------------------------')
 
         background_scheduler = BackgroundScheduler()
@@ -364,7 +364,7 @@ if __name__ == '__main__':
                    'MORNING_RUN_ENABLED: ' + str(MORNING_RUN_ENABLED) + '\n' +
                    'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
                    'NIGHT_RUN_ENABLED: ' + str(NIGHT_RUN_ENABLED) + '\n' +
-                   'START_TIME_MORNING: ' + str(START_TIME_MORNING)
+                   'START_TIME_NIGHT: ' + str(START_TIME_NIGHT)
                    )
 
         while True:
