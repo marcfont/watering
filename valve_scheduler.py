@@ -3,6 +3,7 @@ from datetime import date, time, timedelta, datetime
 import time as t
 import logging
 import smtplib
+import http.client
 import requests
 import ssl
 import json
@@ -12,6 +13,7 @@ from email.mime.text import MIMEText
 import RPi.GPIO as GPIO
 import math
 import urllib3
+import subprocess
 # no need to worry about SSL to verify connection to meteo.cat
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 HEADER = {'x-api-key': 'yTLyU2J2XraoSZ4LEHpG35izWgS22AMs1DmRJqmZ'}
@@ -324,6 +326,30 @@ def schedule_night_run():
         logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in schedule_night_run: ' + repr(ex))
         send_email('General failure', 'Error in schedule_night_run: ' + repr(ex))
 
+def wait_for_network():
+    """ # wait until Internet connection comes up"""
+    try:
+        # Wait for eth0 to come up
+        eth_down = True
+        while eth_down:
+            if subprocess.getoutput('hostname -I') == "":
+                time.sleep(2)
+            else:
+                eth_down = False
+
+        # wait for Internet to be available
+        internet_down = True
+        while internet_down:
+            if "0 received" in subprocess.getoutput('ping 8.8.8.8 -c 1'):
+                time.sleep(2)
+            else:
+                internet_down = False
+
+    except Exception as ex:
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in wait_for_network: ' + repr(ex))
+        # this may fail anyway
+        send_email('General failure', 'Error in schedule_night_run: ' + repr(ex))
+
 
 if __name__ == '__main__':
     try:
@@ -370,6 +396,6 @@ if __name__ == '__main__':
         while True:
             t.sleep(1000)
 
-    except Exception as ex:
-        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __main__: ' + repr(ex))
-        send_email('General failure', 'Error in __main__: ' + repr(ex))
+    except Exception as e:
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __main__: ' + repr(e))
+        send_email('General failure', 'Error in __main__: ' + repr(e))
