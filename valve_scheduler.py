@@ -353,6 +353,8 @@ def wait_for_network():
 
 if __name__ == '__main__':
     try:
+        wait_for_network()
+
         logging.basicConfig(filename='simple_watering.log', level=logging.INFO)
         logging.info('------------------------------------------------------------')
         logging.info('------------------------System boot on: ' + datetime.now().strftime('%d/%m/%Y, %H:%M:%S'))
