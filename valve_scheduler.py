@@ -336,6 +336,7 @@ def wait_for_network():
                 time.sleep(2)
             else:
                 eth_down = False
+                logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Awaiting WLAN to come up')
 
         # wait for Internet to be available
         internet_down = True
@@ -344,6 +345,7 @@ def wait_for_network():
                 time.sleep(2)
             else:
                 internet_down = False
+                logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Awaiting Internet to come up')
 
     except Exception as ex:
         logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in wait_for_network: ' + repr(ex))
@@ -353,8 +355,6 @@ def wait_for_network():
 
 if __name__ == '__main__':
     try:
-        wait_for_network()
-
         logging.basicConfig(filename='simple_watering.log', level=logging.INFO)
         logging.info('------------------------------------------------------------')
         logging.info('------------------------System boot on: ' + datetime.now().strftime('%d/%m/%Y, %H:%M:%S'))
@@ -363,6 +363,8 @@ if __name__ == '__main__':
         logging.info('------------------------NIGHT_RUN_ENABLED: ' + str(NIGHT_RUN_ENABLED))
         logging.info('------------------------START_TIME_NIGHT: ' + str(START_TIME_NIGHT))
         logging.info('------------------------------------------------------------')
+
+        wait_for_network()
 
         background_scheduler = BackgroundScheduler()
         background_scheduler.start()
