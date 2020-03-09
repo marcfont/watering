@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*- 
+﻿#!/usr/bin/env python
+# -*- coding: latin-1 -*- 
 from __future__ import unicode_literals
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import date, time, timedelta, datetime
