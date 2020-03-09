@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import date, time, timedelta, datetime
 import time as t
