@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*- 
-from __future__ import unicode_literals
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import date, time, timedelta, datetime
 import time as t
@@ -34,7 +31,7 @@ CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit
 DELAY_BETWEEN_CIRCUITS = 5
 
 START_TIME_MORNING = time(9, 20, 0)
-START_TIME_NIGHT = time(22, 00, 0)
+START_TIME_NIGHT = time(22, 57, 0)
 
 flow_rising_count = 0
 real_start_time_s = None
