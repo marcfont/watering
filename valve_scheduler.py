@@ -184,7 +184,7 @@ def minutes(morning_night):
 
 def send_email(subject, body):
     try:
-        port = 485  # For SSL
+        port = 465  # For SSL
         smtp_server = 'smtp.gmail.com'
         sender_email = 'watering.espona@gmail.com'  # Enter your address
         receiver_email = 'marc.font@gmail.com'  # Enter receiver address
