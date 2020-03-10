@@ -1,8 +1,8 @@
 import sys
 from valve_scheduler import *
 
+MINUTES = [10, 3, 10]
 
-MINUTES = [0.1, 0.1, 0.1]
 DELAY_BETWEEN_CIRCUITS = 5
 
 #def enable_valve():
