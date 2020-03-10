@@ -88,8 +88,8 @@ def __meteocat_api_request(api_date, operation_id):
             logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' ERROR #1 in __meteocat_api_request')
 
     except Exception as ex:
-        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in enable_valve: ' + repr(ex))
-        send_email('General failure', 'Error in enable_valve: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __meteocat_api_request: ' + repr(ex))
+        send_email('General failure', 'Error in __meteocat_api_request: ' + repr(ex))
         
 
 def evapotranspiration_rain_day(morning_night):
@@ -142,8 +142,8 @@ def evapotranspiration_rain_day(morning_night):
         return [round(et0_out, 1), round(rain_out, 1)]
 
     except Exception as ex:
-        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in enable_valve: ' + repr(ex))
-        send_email('General failure', 'Error in enable_valve: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in evapotranspiration_rain_day: ' + repr(ex))
+        send_email('General failure', 'Error in evapotranspiration_rain_day: ' + repr(ex))
 
 
 def minutes(morning_night):
@@ -172,14 +172,14 @@ def minutes(morning_night):
                          round(grass_minutes * NIGHT_PORTION / 2)]
                 return night
             else:
-                logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Mongo error in enable_valve')
-                send_email('General failure', 'Mongo error in enable_valve')
+                logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Mongo error in minutes')
+                send_email('General failure', 'Mongo error in minutes')
         else:
             return [0, 0, 0]
 
     except Exception as ex:
-        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in enable_valve: ' + repr(ex))
-        send_email('General failure', 'Error in enable_valve: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in minutes: ' + repr(ex))
+        send_email('General failure', 'Error in minutes: ' + repr(ex))
 
 
 def send_email(subject, body):
@@ -203,8 +203,8 @@ def send_email(subject, body):
             server.sendmail(sender_email, receiver_email, text)
 
     except Exception as ex:
-        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in enable_valve: ' + repr(ex))
-        send_email('General failure', 'Error in enable_valve: ' + repr(ex))
+        logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in send_email: ' + repr(ex))
+        send_email('General failure', 'Error in send_email: ' + repr(ex))
 
 
 def enable_valve(valve_id):
