@@ -30,7 +30,7 @@ CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 DELAY_BETWEEN_CIRCUITS = 5
 
-START_TIME_MORNING = time(9, 20, 0)
+START_TIME_MORNING = time(11, 41, 0)
 START_TIME_NIGHT = time(22, 57, 0)
 
 flow_rising_count = 0
@@ -184,7 +184,7 @@ def minutes(morning_night):
 
 def send_email(subject, body):
     try:
-        port = 587  # For SSL
+        port = 485  # For SSL
         smtp_server = 'smtp.gmail.com'
         sender_email = 'watering.espona@gmail.com'  # Enter your address
         receiver_email = 'marc.font@gmail.com'  # Enter receiver address
