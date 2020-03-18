@@ -5,13 +5,6 @@ MINUTES = [10, 3, 10]
 
 DELAY_BETWEEN_CIRCUITS = 5
 
-#def enable_valve():
-#	print('running enable_valve')
-
-
-#def disable_valve():
-#	print('running disable_valve')
-
 def self_kill():
 	sys.exit()
 
