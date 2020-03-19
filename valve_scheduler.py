@@ -182,6 +182,10 @@ def minutes(morning_night):
         send_email('General failure', 'Error in minutes: ' + repr(ex))
 
 
+def print_minutes():
+	print('Morning: ' + str(minutes('morning')))
+	print('Night: ' + str(minutes('night')))
+	
 def send_email(subject, body):
     try:
         port = 465  # For SSL
