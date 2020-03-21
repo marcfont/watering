@@ -265,7 +265,7 @@ def sensor_callback(channel):
     flow_rising_count = flow_rising_count + 1
 
 
-def gpio_init():
+def gpio_init(): 
     try:
         GPIO.setmode(GPIO.BOARD)
         GPIO.setwarnings(False)
