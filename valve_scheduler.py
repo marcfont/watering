@@ -18,6 +18,11 @@ import subprocess
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 HEADER = {'x-api-key': 'yTLyU2J2XraoSZ4LEHpG35izWgS22AMs1DmRJqmZ'}
 
+# ------------------ RUN PARAMETERS -----------------------
+
+MANUAL_MINUTES = True
+MINUTES = [10, 4, 10]
+
 MORNING_RUN_ENABLED = True
 NIGHT_RUN_ENABLED = False
 
@@ -26,12 +31,14 @@ GPIO_4_RIGHT = 16
 GPIO_5_FAR = 18
 GPIO_6_LEFT = 22
 
+START_TIME_MORNING = time(6, 0, 0)
+START_TIME_NIGHT = time(22, 0, 0)
+
+# ------------------ HARDWARE PARAMETERS ------------------
+
 CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
 CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
 DELAY_BETWEEN_CIRCUITS = 5
-
-START_TIME_MORNING = time(11, 58, 0)
-START_TIME_NIGHT = time(22, 57, 0)
 
 flow_rising_count = 0
 real_start_time_s = None
@@ -282,7 +289,10 @@ def gpio_init():
 def schedule_morning_run():
     try:
         # Morning run takes into account today and yesterday
-        minutes_morning = minutes('morning')
+		if MANUAL_MINUTES:
+			minutes_morning = MINUTES
+		else:
+			minutes_morning = minutes('morning')
 
         send_email('Watering morning running: ',
                    'START_TIME_MORNING: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
@@ -308,7 +318,10 @@ def schedule_morning_run():
 def schedule_night_run():
     try:
         # Night run takes into account just today
-        minutes_night = minutes('night')
+		if MANUAL_MINUTES:
+			minutes_night = MINUTES
+		else:
+			minutes_night = minutes('night')		
 
         send_email('Watering night running: ',
                    'START_TIME_NIGHT: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
