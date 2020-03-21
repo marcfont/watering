@@ -411,9 +411,9 @@ if __name__ == '__main__':
 
 										 second=night_run.second)
 		
-		content = 'MORNING_RUN_ENABLED: ' + str(MORNING_RUN_ENABLED) + '\n' +
-		'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
-		'NIGHT_RUN_ENABLED: ' + str(NIGHT_RUN_ENABLED) + '\n' +
+		content = 'MORNING_RUN_ENABLED: ' + str(MORNING_RUN_ENABLED) + '\n' +\
+		'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +\
+		'NIGHT_RUN_ENABLED: ' + str(NIGHT_RUN_ENABLED) + '\n' +\
 		'START_TIME_NIGHT: ' + str(START_TIME_NIGHT)
 
 		if MANUAL_MINUTES:
