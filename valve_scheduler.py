@@ -381,7 +381,7 @@ if __name__ == '__main__':
         logging.info('------------------------START_TIME_NIGHT: ' + str(START_TIME_NIGHT))
         if MANUAL_MINUTES:
             logging.info('------------------------MANUAL_MINUTES: ' + str(MANUAL_MINUTES))
-            logging.info('------------------------MINUTES: ' + str(MINUTES))        
+            logging.info('------------------------MINUTES: ' + str(MINUTES))		
         logging.info('------------------------------------------------------------')
 
         wait_for_network()
@@ -410,17 +410,18 @@ if __name__ == '__main__':
             background_scheduler.add_job(schedule_night_run, 'cron', hour=night_run.hour, minute=night_run.minute,
 
                                          second=night_run.second)
-        
-        content = 'Watering calculation scheduled (program restart)',
-                   'MORNING_RUN_ENABLED: ' + str(MORNING_RUN_ENABLED) + '\n' +
-                   'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
-                   'NIGHT_RUN_ENABLED: ' + str(NIGHT_RUN_ENABLED) + '\n' +
-                   'START_TIME_NIGHT: ' + str(START_TIME_NIGHT)
-        if MANUAL_MINUTES:
-            content = content + '\nMANUAL_MINUTES: ' + str(MANUAL_MINUTES) + '\n' +
-                   'MINUTES: ' + str(MINUTES)
-                   
-        send_email(content)
+		
+		content = 'Watering calculation scheduled (program restart)',
+        'MORNING_RUN_ENABLED: ' + str(MORNING_RUN_ENABLED) + '\n' +
+        'START_TIME_MORNING: ' + str(START_TIME_MORNING) + '\n' +
+        'NIGHT_RUN_ENABLED: ' + str(NIGHT_RUN_ENABLED) + '\n' +
+        'START_TIME_NIGHT: ' + str(START_TIME_NIGHT)
+
+		if MANUAL_MINUTES:
+			content = content + '\nMANUAL_MINUTES: ' + str(MANUAL_MINUTES) + '\n' +
+            'MINUTES: ' + str(MINUTES)
+				   
+        send_email('Watering calculation scheduled (program restart)', content)
 
         while True:
             t.sleep(1000)
