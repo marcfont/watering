@@ -265,7 +265,7 @@ def sensor_callback(channel):
     flow_rising_count = flow_rising_count + 1
 
 
-def gpio_init(): 
+def gpio_init():
     try:
         GPIO.setmode(GPIO.BOARD)
         GPIO.setwarnings(False)
@@ -288,7 +288,7 @@ def gpio_init():
 
 def schedule_morning_run():
     try:
-        # Morning run takes into account today and yesterday
+		# Morning run takes into account today and yesterday
 		if MANUAL_MINUTES:
 			minutes_morning = MINUTES
 		else:
@@ -317,7 +317,7 @@ def schedule_morning_run():
 
 def schedule_night_run():
     try:
-        # Night run takes into account just today
+		# Night run takes into account just today
 		if MANUAL_MINUTES:
 			minutes_night = MINUTES
 		else:
