@@ -417,7 +417,7 @@ if __name__ == '__main__':
 		'START_TIME_NIGHT: ' + str(START_TIME_NIGHT)
 
 		if MANUAL_MINUTES:
-			content = content + '\nMANUAL_MINUTES: ' + str(MANUAL_MINUTES) + '\n' +
+			content = content + '\nMANUAL_MINUTES: ' + str(MANUAL_MINUTES) + '\n' +\
 			'MINUTES: ' + str(MINUTES)
 				   
 		send_email('Watering calculation scheduled (program restart)', content)
