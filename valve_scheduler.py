@@ -376,7 +376,6 @@ if __name__ == '__main__':
         logging.info('------------------------------------------------------------')
         logging.info('------------------------System boot on: ' + datetime.now().strftime('%d/%m/%Y, %H:%M:%S'))
         if MANUAL_MINUTES:
-            minutes_morning = MINUTES
             logging.info('------------------------MANUAL_MINUTES: ' + str(MANUAL_MINUTES))
             logging.info('------------------------MINUTES: ' + str(MINUTES))
         logging.info('------------------------MORNING_RUN_ENABLED: ' + str(MORNING_RUN_ENABLED))
