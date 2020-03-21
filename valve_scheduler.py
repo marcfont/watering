@@ -190,9 +190,9 @@ def minutes(morning_night):
 
 
 def print_minutes():
-	print('Morning: ' + str(minutes('morning')))
-	print('Night: ' + str(minutes('night')))
-	
+    print('Morning: ' + str(minutes('morning')))
+    print('Night: ' + str(minutes('night')))
+    
 def send_email(subject, body):
     try:
         port = 465  # For SSL
@@ -288,11 +288,11 @@ def gpio_init():
 
 def schedule_morning_run():
     try:
-		# Morning run takes into account today and yesterday
-		if MANUAL_MINUTES:
-			minutes_morning = MINUTES
-		else:
-			minutes_morning = minutes('morning')
+        # Morning run takes into account today and yesterday
+        if MANUAL_MINUTES:
+            minutes_morning = MINUTES
+        else:
+            minutes_morning = minutes('morning')
 
         send_email('Watering morning running: ',
                    'START_TIME_MORNING: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
@@ -317,11 +317,11 @@ def schedule_morning_run():
 
 def schedule_night_run():
     try:
-		# Night run takes into account just today
-		if MANUAL_MINUTES:
-			minutes_night = MINUTES
-		else:
-			minutes_night = minutes('night')		
+        # Night run takes into account just today
+        if MANUAL_MINUTES:
+            minutes_night = MINUTES
+        else:
+            minutes_night = minutes('night')        
 
         send_email('Watering night running: ',
                    'START_TIME_NIGHT: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
