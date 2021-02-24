@@ -273,7 +273,6 @@ def gpio_init():
 
 def schedule_morning_run():
 	try:
-		# Morning run takes into account today and yesterday
 		if MANUAL_MINUTES:
 			minutes = MINUTES
 		else:
@@ -285,6 +284,8 @@ def schedule_morning_run():
 		logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering morning running: \n' +
 					 'START_TIME_MORNING: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
 					 'MINUTES_MORNING: ' + str(minutes))
+					 
+		#TODO guardar a la DB (veure TODO.txt)
 
 		run_time = datetime.now()
 		if minutes != [0, 0, 0]:
