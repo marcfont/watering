@@ -160,12 +160,13 @@ def minutes():
 		MIN_ETO_REAL = 0.5 # Això són 8.4 minuts de gespa i 1.1 de maduixes
 
 		[eto, rain] = __evapo_yesterday_Oris()
+		print eto
+		print rain
 		eto_real = eto * KJ - rain * EFFECTIVE_RAIN
 
 		if eto_real >= MIN_ETO_REAL:
 			grass_minutes = eto_real * REAL_ETO_TO_MINUTES_SLOPE
 			strawberry_minutes = grass_minutes * STRAWBERRY_TO_GRASS
-			# todo: review morning portion
 			morning = [round(grass_minutes / 2), round(strawberry_minutes), round(grass_minutes / 2)]
 			return morning
 		else:
