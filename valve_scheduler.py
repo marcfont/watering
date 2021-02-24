@@ -53,8 +53,8 @@ def __evapo_yesterday_Oris():
 
 	try:
 		# url model --> https://api.meteo.cat/xema/v1/variables/cmv/6006/2021/02/23?codiEstacio=CC
-		url = 'https://api.meteo.cat/xema/v1/variables/cmv/6006/' +
-			  str(api_date.year) + '/' + str(api_date.month).zfill(2) + '/' \
+		url = 'https://api.meteo.cat/xema/v1/variables/cmv/6006/' \
+			  + str(api_date.year) + '/' + str(api_date.month).zfill(2) + '/' \
 			  + str(api_date.day).zfill(2) + '?codiEstacio=CC'
 		r = requests.get(url, headers=HEADER, verify=False)
 
