@@ -1,29 +1,37 @@
-Circuits
-	per cada circuit
-		nom del circuit
-		ports de comunicació de cada circuit
-		reducció de temps per cada circuit
-		litres aigua per circuit per min
+Crear una classe "circuit" amb els camps de la web. La resta de la configuració s'hauria de guardar a algun lloc.
+Passar el valve_scheduler a servei de manera que des de la web se li pugui fer un restart.
 
-Configuració de reg
-	KJ = 0.5
-	EFFECTIVE_RAIN = 0.8
-	REAL_ETO_TO_MINUTES_SLOPE = 13
-	STRAWBERRY_TO_GRASS = 1/8
-	MIN_ETO_REAL = 0.5 (TODO: fer que el mínim siguin minuts?)
+circuits = [Circuit('Right', 16, 0.5, 10), Circuit('Far', 18, 0.125, 10), Circuit('Left', 22, 0.5, 3)]
 
-Manual/auto
-	temps manual (per cada circuit)
-	hora auto
-	
-Gràfic amb Històric d'execucions diraries
-	minuts
-	litres d'aigua
-	
-Taula execucions diaries
-	dia
-	nom_circuit
-	cabal_l_min
-	minuts
+
+Contingut de la web
+
+	Circuits
+		per cada circuit (opció de crear-ne més)
+			nom del circuit
+			ports de comunicació de cada circuit
+			reducció de temps per cada circuit
+			litres aigua per circuit per min
+
+	Configuració de reg
+		KJ = 0.5
+		EFFECTIVE_RAIN = 0.8
+		REAL_ETO_TO_MINUTES_SLOPE = 13
+		STRAWBERRY_TO_GRASS = 1/8
+		MIN_ETO_REAL = 0.5 (TODO: fer que el mínim siguin minuts?)
+
+	Manual/auto
+		temps manual (per cada circuit)
+		hora auto
+		
+	Gràfic amb Històric d'execucions diraries
+		minuts
+		litres d'aigua
+		
+	Taula execucions diaries
+		dia
+		nom_circuit
+		cabal_l_min
+		minuts
 	
 	

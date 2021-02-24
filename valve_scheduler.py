@@ -1,7 +1,3 @@
-#todo: fer el càlcul de ETo fent servir el càlcul de meteo.cat 
-#todo: crear un csv a part per guardar els càlculs de ETo meu i de meteo.cat. Date, source, ETo
-#todo: fer el càlcul ben fet de litres necessaris cap a temps de regar
-#todo: refactoritzar-ho tot oblidant-nos de la passada nocturna
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import date, time, timedelta, datetime
 import time as t
