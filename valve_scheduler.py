@@ -48,8 +48,8 @@ def __evapo_yesterday_Oris():
 		returns 24h accumulated evapotraspiration for the day before
 	"""
 
-	when = date.today()
-	when = date.today() - timedelta(days=1)
+	api_date = date.today()
+	api_date = date.today() - timedelta(days=1)
 
 	try:
 		# url model --> https://api.meteo.cat/xema/v1/variables/cmv/6006/2021/02/23?codiEstacio=CC
@@ -66,16 +66,30 @@ def __evapo_yesterday_Oris():
 		#		]
 		#	}
 		
-		value = 0.0
+		eto = 0.0
 		if r.ok:
 			data = json.loads(r.text)
 
 			for d in data['lectures']:
-				value = value + (d['valor'])
+				eto = eto + (d['valor'])
 		else:
 			# todo: error handling
 			logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' ERROR #1 in __meteocat_api_request')
-		return value
+			
+		# url model --> https://api.meteo.cat/xema/v1/variables/mesurades/36/2019/05/28?codiEstacio=CC
+		url = 'https://api.meteo.cat/xema/v1/variables/mesurades/35/' \
+			  + str(api_date.year) + '/' + str(api_date.month).zfill(2) + '/' \
+			  + str(api_date.day).zfill(2) + '?codiEstacio=CC'
+		r = requests.get(url, headers=HEADER, verify=False)
+		
+		rain = 0.0
+		if r.ok:
+			data = json.loads(r.text)
+
+			for d in data['lectures']:
+				rain = rain + (d['valor'])		
+		
+		return [eto, rain]
 
 	except Exception as ex:
 		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __meteocat_api_request: ' + repr(ex))
