@@ -154,10 +154,6 @@ def minutes():
 			# todo: review morning portion
 			morning = [round(grass_minutes / 2), round(strawberry_minutes), round(grass_minutes / 2)]
 			return morning
-	
-			else:
-				logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Mongo error in minutes')
-				send_email('General failure', 'Mongo error in minutes')
 		else:
 			return [0, 0, 0]
 
