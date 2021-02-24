@@ -24,7 +24,7 @@ HEADER = {'x-api-key': 'yTLyU2J2XraoSZ4LEHpG35izWgS22AMs1DmRJqmZ'}
 
 # ------------------ RUN PARAMETERS -----------------------
 
-MANUAL_MINUTES = True
+MANUAL_MINUTES = False
 MINUTES = [10, 4, 10]
 
 GPIO_2_FLOW_METER = 13
