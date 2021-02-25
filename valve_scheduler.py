@@ -269,6 +269,7 @@ def gpio_init():
 
 def schedule_morning_run():
 	try:
+		minutes = [0, 0, 0]
 		if MANUAL_MINUTES:
 			minutes = MINUTES
 		else:
