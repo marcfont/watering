@@ -25,15 +25,15 @@ Contingut de la web
 		REAL_ETO_TO_MINUTES_SLOPE = 13
 		STRAWBERRY_TO_GRASS = 1/8
 		MIN_ETO_REAL = 0.5 
+		DELAY_BETWEEN_CIRCUITS = 5
 		
 	Gràfic amb Històric d'execucions diraries
 		minuts
 		litres d'aigua
 		
 	Taula execucions diaries
-		dia
-		nom_circuit
-		cabal_l_min
+		datetime
+		volum_l
 		minuts
 
 [RUN]
@@ -46,8 +46,9 @@ ManualTimes = [10, 4, 10]
 KJ = 0.5
 EFFECTIVE_RAIN = 0.8
 REAL_ETO_TO_MINUTES_SLOPE = 13
-STRAWBERRY_TO_GRASS = 1/8
+STRAWBERRY_TO_GRASS = 0.125
 MIN_ETO_REAL = 0.5
+DELAY_BETWEEN_CIRCUITS = 5
 
 [CIRCUITS]
 NumCircuits = 3
