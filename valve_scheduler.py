@@ -269,28 +269,28 @@ def gpio_init():
 
 def schedule_morning_run():
 	try:
-		minutes = [0, 0, 0]
+		minutes_to_run = [0, 0, 0]
 		if MANUAL_MINUTES:
-			minutes = MINUTES
+			minutes_to_run = MINUTES
 		else:
-			minutes = minutes()
+			minutes_to_run = minutes()
 
 		send_email('Watering morning running: ',
 				   'START_TIME_MORNING: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
-				   'MINUTES_MORNING: ' + str(minutes))
+				   'MINUTES_MORNING: ' + str(minutes_to_run))
 		logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering morning running: \n' +
 					 'START_TIME_MORNING: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
-					 'MINUTES_MORNING: ' + str(minutes))
+					 'MINUTES_MORNING: ' + str(minutes_to_run))
 					 
 		#TODO guardar a la DB (veure TODO.txt)
 
 		run_time = datetime.now()
-		if minutes != [0, 0, 0]:
+		if minutes_to_run != [0, 0, 0]:
 			for i in range(0, len(CIRCUITS)):
 				run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
 				background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
-				run_time = run_time + timedelta(minutes=minutes[i], seconds=DELAY_BETWEEN_CIRCUITS)
+				run_time = run_time + timedelta(minutes=minutes_to_run[i], seconds=DELAY_BETWEEN_CIRCUITS)
 				background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
 
 	except Exception as ex:

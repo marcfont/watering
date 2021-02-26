@@ -6,23 +6,25 @@ circuits = [Circuit('Right', 16, 0.5, 10), Circuit('Far', 18, 0.125, 10), Circui
 
 Contingut de la web
 
+
+
+	Manual/auto
+		temps manual (per cada circuit)
+		hora auto
+		
 	Circuits
 		per cada circuit (opció de crear-ne més)
 			nom del circuit
 			ports de comunicació de cada circuit
 			reducció de temps per cada circuit
-			litres aigua per circuit per min
-
+			litres aigua per circuit per min		
+			
 	Configuració de reg
 		KJ = 0.5
 		EFFECTIVE_RAIN = 0.8
 		REAL_ETO_TO_MINUTES_SLOPE = 13
 		STRAWBERRY_TO_GRASS = 1/8
-		MIN_ETO_REAL = 0.5 (TODO: fer que el mínim siguin minuts?)
-
-	Manual/auto
-		temps manual (per cada circuit)
-		hora auto
+		MIN_ETO_REAL = 0.5 
 		
 	Gràfic amb Històric d'execucions diraries
 		minuts
@@ -33,5 +35,38 @@ Contingut de la web
 		nom_circuit
 		cabal_l_min
 		minuts
-	
-	
+
+[RUN]
+RunTime = 06:00
+ManualTimeCalculation = no
+ManualTimes = [10, 4, 10]
+#must have 'NumCircuits' entries
+
+[WATERING]
+KJ = 0.5
+EFFECTIVE_RAIN = 0.8
+REAL_ETO_TO_MINUTES_SLOPE = 13
+STRAWBERRY_TO_GRASS = 1/8
+MIN_ETO_REAL = 0.5
+
+[CIRCUITS]
+NumCircuits = 3
+
+[CIRCUIT1]
+Name = Right
+Port = 16
+Percentage = 0.5
+Flow_m3_h = 0.24
+
+[CIRCUIT2]
+Name = Far
+Port = 18
+Percentage = 0.125
+Flow_m3_h = 0.25
+
+[CIRCUIT2]
+Name = Left
+Port = 22
+Percentage = 0.5
+Flow_m3_h = 0.24
+
