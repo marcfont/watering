@@ -27,8 +27,7 @@ with open('valve_scheduler.conf') as f:
 json.dump(config, open('conf.json', 'w'))
 
 START_TIME_MORNING = config['RUNTIME']
-MANUAL_MINUTES = config['MANUAL_MINUTES_CALCULATION']
-MINUTES = config['MANUAL_MINUTES']
+MANUAL_MINUTES = bool(config['MANUAL_MINUTES_CALCULATION'])
 
 KJ = config['KJ'] 
 EFFECTIVE_RAIN = config['EFFECTIVE_RAIN'] 
@@ -208,7 +207,9 @@ def schedule_daily_run():
 	try:
 		minutes_to_run = [0, 0, 0]
 		if MANUAL_MINUTES:
-			minutes_to_run = MINUTES
+			minutes_to_run = []
+			for i in range(len(CIRCUIT_DEFINITIONS)):
+			minutes_to_run.append(CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'])
 		else:
 			minutes_to_run = minutes()
 
