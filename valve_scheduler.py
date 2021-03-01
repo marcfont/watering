@@ -27,7 +27,7 @@ with open('valve_scheduler.conf') as f:
     config = json.load(f)
 json.dump(config, open('conf.json', 'w'))
 
-START_TIME_MORNING = t.strptime(config['RUNTIME'], '%H:%M:%S')
+START_TIME = t.strptime(config['RUNTIME'], '%H:%M:%S')
 MANUAL_MINUTES = bool(int(config['MANUAL_MINUTES_CALCULATION']))
 
 KJ = float(config['KJ'])
@@ -215,10 +215,10 @@ def schedule_daily_run():
 			minutes_to_run = minutes()
 
 		send_email('Watering morning running: ',
-				   'START_TIME_MORNING: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
+				   'START_TIME: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
 				   'MINUTES_MORNING: ' + str(minutes_to_run))
 		logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering morning running: \n' +
-					 'START_TIME_MORNING: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
+					 'START_TIME: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
 					 'MINUTES_MORNING: ' + str(minutes_to_run))
 					 
 		#TODO guardar a la DB (veure TODO.txt)
@@ -270,7 +270,7 @@ if __name__ == '__main__':
 		logging.info('------------------------------------------------------------')
 		logging.info('------------------------System boot on: ' + datetime.now().strftime('%d/%m/%Y, %H:%M:%S'))
 		logging.info('------------------------MORNING_RUN_ENABLED: True')
-		logging.info('------------------------START_TIME_MORNING: ' + str(START_TIME_MORNING))
+		logging.info('------------------------START_TIME: ' + str(START_TIME))
 		if MANUAL_MINUTES:
 			logging.info('------------------------MANUAL_MINUTES: ' + str(MANUAL_MINUTES))
 			logging.info('------------------------MINUTES: ' + str(MINUTES))		
@@ -290,16 +290,20 @@ if __name__ == '__main__':
 
 		gpio_init()
 
-		background_scheduler.add_job(schedule_daily_run, 'cron', hour = int(t.strftime('%H', START_TIME_MORNING)), 
-															 	 minute = int(t.strftime('%M', START_TIME_MORNING)), 
-																 second = int(t.strftime('%S', START_TIME_MORNING)))
+		background_scheduler.add_job(schedule_daily_run, 'cron', hour = int(t.strftime('%H', START_TIME)), 
+															 	 minute = int(t.strftime('%M', START_TIME)), 
+																 second = int(t.strftime('%S', START_TIME)))
 		
 		content = 'MORNING_RUN_ENABLED: True' + '\n' +\
-		'START_TIME_MORNING: ' + str(START_TIME_MORNING)
+		'START_TIME: ' + str(START_TIME)
 
 		if MANUAL_MINUTES:
-			content = content + '\nMANUAL_MINUTES: ' + str(MANUAL_MINUTES) + '\n' +\
-			'MINUTES: ' + str(MINUTES)
+			minutes_to_run = []
+			for i in range(len(CIRCUIT_DEFINITIONS)):
+				minutes_to_run.append(CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'])
+				
+			content = content + '\nMANUAL_MINUTES: ' + str(START_TIME) + '\n' +\
+			'MINUTES: ' + str(minutes_to_run)
 				   
 		send_email('Watering calculation scheduled (program restart)', content)
 
