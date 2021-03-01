@@ -190,18 +190,14 @@ def disable_valve(valve_id):
 def gpio_init():
 	try:
 		GPIO.setmode(GPIO.BOARD)
-		GPIO.setwarnings(False)
+		GPIO.setwarnings(False)		
 
 		#GPIO.setup(GPIO_2_FLOW_METER, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-
-		GPIO.setup(GPIO_4_RIGHT, GPIO.OUT)
-		GPIO.setup(GPIO_5_FAR, GPIO.OUT)
-		GPIO.setup(GPIO_6_LEFT, GPIO.OUT)
-
-		# this shouldn't be needed but here it comes just in case
-		GPIO.output(GPIO_4_RIGHT, GPIO.HIGH)
-		GPIO.output(GPIO_5_FAR, GPIO.HIGH)
-		GPIO.output(GPIO_6_LEFT, GPIO.HIGH)
+		
+		for i in range(len(CIRCUIT_DEFINITIONS)):
+			GPIO.setup(CIRCUIT_DEFINITIONS[i]['PORT'], GPIO.OUT)
+			# this shouldn't be needed but here it comes just in case
+			GPIO.output(CIRCUIT_DEFINITIONS[i]['PORT'], GPIO.HIGH)			
 
 	except Exception as ex:
 		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in gpio_init: ' + repr(ex))
