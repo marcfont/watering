@@ -272,8 +272,11 @@ if __name__ == '__main__':
 		logging.info('------------------------MORNING_RUN_ENABLED: True')
 		logging.info('------------------------START_TIME: ' + str(START_TIME))
 		if MANUAL_MINUTES:
-			logging.info('------------------------MANUAL_MINUTES: ' + str(MANUAL_MINUTES))
-			logging.info('------------------------MINUTES: ' + str(MINUTES))		
+			minutes_to_run = []
+			for i in range(len(CIRCUIT_DEFINITIONS)):
+				minutes_to_run.append(CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'])		
+			logging.info('------------------------MANUAL_MINUTES: ' + str(bool(MANUAL_MINUTES)))
+			logging.info('------------------------MINUTES: ' + str(minutes_to_run))		
 		logging.info('------------------------------------------------------------')
 
 		wait_for_network()
@@ -298,11 +301,7 @@ if __name__ == '__main__':
 		'START_TIME: ' + str(START_TIME)
 
 		if MANUAL_MINUTES:
-			minutes_to_run = []
-			for i in range(len(CIRCUIT_DEFINITIONS)):
-				minutes_to_run.append(CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'])
-				
-			content = content + '\nMANUAL_MINUTES: ' + str(START_TIME) + '\n' +\
+			content = content + '\nMANUAL_MINUTES: ' + str(bool(MANUAL_MINUTES)) + '\n' +\
 			'MINUTES: ' + str(minutes_to_run)
 				   
 		send_email('Watering calculation scheduled (program restart)', content)
