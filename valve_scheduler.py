@@ -208,7 +208,7 @@ def schedule_daily_run():
 		minutes_to_run = [0, 0, 0]
 		if MANUAL_MINUTES:
 			minutes_to_run = []
-				for i in range(len(CIRCUIT_DEFINITIONS)):
+			for i in range(len(CIRCUIT_DEFINITIONS)):
 				minutes_to_run.append(CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'])
 		else:
 			minutes_to_run = minutes()
