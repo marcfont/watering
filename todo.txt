@@ -28,46 +28,16 @@ Contingut de la web
 		DELAY_BETWEEN_CIRCUITS = 5
 		
 	Gràfic amb Històric d'execucions diraries
+		data hora
+		evapo
 		minuts
 		litres d'aigua
 		
 	Taula execucions diaries
 		datetime
-		volum_l
-		minuts
+		evapotranspiration
+		volume_l
+		minutes
 
-[RUN]
-RunTime = 06:00
-ManualTimeCalculation = no
-ManualTimes = [10, 4, 10]
-#must have 'NumCircuits' entries
 
-[WATERING]
-KJ = 0.5
-EFFECTIVE_RAIN = 0.8
-REAL_ETO_TO_MINUTES_SLOPE = 13
-STRAWBERRY_TO_GRASS = 0.125
-MIN_ETO_REAL = 0.5
-DELAY_BETWEEN_CIRCUITS = 5
-
-[CIRCUITS]
-NumCircuits = 3
-
-[CIRCUIT1]
-Name = Right
-Port = 16
-Percentage = 0.5
-Flow_m3_h = 0.24
-
-[CIRCUIT2]
-Name = Far
-Port = 18
-Percentage = 0.125
-Flow_m3_h = 0.25
-
-[CIRCUIT2]
-Name = Left
-Port = 22
-Percentage = 0.5
-Flow_m3_h = 0.24
 

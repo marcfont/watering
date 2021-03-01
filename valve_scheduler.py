@@ -14,29 +14,31 @@ import RPi.GPIO as GPIO
 import math
 import urllib3
 import subprocess
+import configparser
 # no need to worry about SSL to verify connection to meteo.cat
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 HEADER = {'x-api-key': 'yTLyU2J2XraoSZ4LEHpG35izWgS22AMs1DmRJqmZ'}
 
-# ------------------ RUN PARAMETERS -----------------------
+#GPIO_2_FLOW_METER = 13
+#flow_rising_count = 0
 
-MANUAL_MINUTES = False
-MINUTES = [10, 4, 10]
+# ------------------ READ CONFIG FILE ---------------------
+config = configparser.ConfigParser()
+config.read('valve_shceduler.conf')
 
-GPIO_2_FLOW_METER = 13
-GPIO_4_RIGHT = 16
-GPIO_5_FAR = 18
-GPIO_6_LEFT = 22
+START_TIME_MORNING = config.['RUN'].['RUNTIME']
+MANUAL_MINUTES = config.['RUN'].['MANUAL_MINUTES_CALCULATION']
+MINUTES = config.['RUN'].['MANUAL_MINUTES']
 
-START_TIME_MORNING = time(6, 0, 0)
+KJ = config.['WATERING'].['KJ'] 
+EFFECTIVE_RAIN = config.['WATERING'].['EFFECTIVE_RAIN'] 
+REAL_ETO_TO_MINUTES_SLOPE = config.['WATERING'].['REAL_ETO_TO_MINUTES_SLOPE'] 
+STRAWBERRY_TO_GRASS = config.['WATERING'].['STRAWBERRY_TO_GRASS'] 
+MIN_ETO_REAL = config.['WATERING'].['MIN_ETO_REAL'] 
+DELAY_BETWEEN_CIRCUITS = config.['WATERING'].['CIRCUIT_DEFINITIONS'] 
 
-# ------------------ HARDWARE PARAMETERS ------------------
+CIRCUIT_DEFINITIONS = config.['CIR'].['CIRCUIT_DEFINITIONS'] 
 
-CIRCUITS = [GPIO_4_RIGHT, GPIO_5_FAR, GPIO_6_LEFT]
-CIRCUIT_NAMES = dict([(GPIO_4_RIGHT, 'Right circuit'), (GPIO_5_FAR, 'Far circuit'), (GPIO_6_LEFT, 'Left circuit')])
-DELAY_BETWEEN_CIRCUITS = 5
-
-flow_rising_count = 0
 real_start_time_s = None
 
 def __evapo_yesterday_Oris():
@@ -70,7 +72,7 @@ def __evapo_yesterday_Oris():
 				eto = eto + (d['valor'])
 		else:
 			# todo: error handling
-			logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' ERROR #1 in __meteocat_api_request')
+			logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' ERROR #1 in __evapo_yesterday_Oris')
 			
 		# url model --> https://api.meteo.cat/xema/v1/variables/mesurades/36/2019/05/28?codiEstacio=CC
 		url = 'https://api.meteo.cat/xema/v1/variables/mesurades/35/' \
@@ -88,73 +90,12 @@ def __evapo_yesterday_Oris():
 		return [eto, rain]
 
 	except Exception as ex:
-		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __meteocat_api_request: ' + repr(ex))
-		send_email('General failure', 'Error in __meteocat_api_request: ' + repr(ex))
+		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __evapo_yesterday_Oris: ' + repr(ex))
+		send_email('General failure', 'Error in __evapo_yesterday_Oris: ' + repr(ex))
 
-
-def __meteocat_api_request(api_date, operation_id):
-	"""
-	:param api_date: day to get the data from
-	:param operation_id: allowed values: 'temp', 'rain', 'rh', 'rad', 'wind'
-	temp-->32 returns [max, min]
-	rain-->35 returns [sum()]
-	rh-->33 returns [max, min]
-	rad->36 returns [calculation()], see readme.md
-	wind->30 returns [mean()]
-	"""
-	operations = {'temp': '32', 'rain': '35', 'rh': '33', 'rad': '36', 'wind': '30'}
-
-	if type(api_date) is not date:
-		raise TypeError('First parameter must be datetime.dat, not %s' % type(api_date))
-	if not operations.__contains__(operation_id):
-		raise TypeError('Second parameter has unaccepted value %s' % operation_id)
-
-	try:
-		# url model --> https://api.meteo.cat/xema/v1/variables/mesurades/36/2019/05/28?codiEstacio=CC
-		url = 'https://api.meteo.cat/xema/v1/variables/mesurades/' + str(operations[operation_id]) + '/' + \
-			  str(api_date.year) + '/' + str(api_date.month).zfill(2) + '/' \
-			  + str(api_date.day).zfill(2) + '?codiEstacio=CC'
-		r = requests.get(url, headers=HEADER, verify=False)
-
-		# sample:
-		# {'codi': 35, 'lectures':
-		# [{'data': '2019-05-03T00:00Z', 'valor': 0.5, 'estat': 'V', 'baseHoraria': 'SH'},
-		# {'data': '2019-05-03T00:30Z', 'valor': 0, 'estat': 'V', 'baseHoraria': 'SH'}]}
-		#
-		# dt = datetime.strptime('2019-05-03T00:00Z', '%Y-%m-%dT%H:%MZ')
-		if r.ok:
-			data = json.loads(r.text)
-			values = []
-
-			for d in data['lectures']:
-				values.append(d['valor'])
-
-			if operation_id == 'temp' or operation_id == 'rh':
-				return [max(values), min(values)]
-			elif operation_id == 'rain':
-				return sum(values)
-			elif operation_id == 'rad':
-				# Irradiació = (average(irradiància) * segons en el període) / 1000000
-				return statistics.mean(values) * 60 * 30 * len(values) / 1000000
-			elif operation_id == 'wind':
-				return statistics.mean(values)
-		else:
-			# todo: error handling
-			logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' ERROR #1 in __meteocat_api_request')
-
-	except Exception as ex:
-		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __meteocat_api_request: ' + repr(ex))
-		send_email('General failure', 'Error in __meteocat_api_request: ' + repr(ex))
-		
 
 def minutes():
 	try:
-		KJ = 0.5
-		EFFECTIVE_RAIN = 0.8
-		REAL_ETO_TO_MINUTES_SLOPE = 13
-		STRAWBERRY_TO_GRASS = 1/8
-		MIN_ETO_REAL = 0.5 # Això són 8.4 minuts de gespa i 1.1 de maduixes
-
 		[eto, rain] = __evapo_yesterday_Oris()
 		eto_real = eto * KJ - rain * EFFECTIVE_RAIN
 
@@ -207,7 +148,7 @@ def enable_valve(valve_id):
 		global real_start_time_s
 		real_start_time_s = datetime.now()
 		GPIO.output(valve_id, GPIO.LOW)
-		GPIO.add_event_detect(GPIO_2_FLOW_METER, GPIO.RISING, callback=sensor_callback)
+		#GPIO.add_event_detect(GPIO_2_FLOW_METER, GPIO.RISING, callback=sensor_callback)
 
 	except Exception as ex:
 		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in enable_valve: ' + repr(ex))
@@ -217,7 +158,7 @@ def enable_valve(valve_id):
 def disable_valve(valve_id):
 	try:
 		GPIO.output(valve_id, GPIO.HIGH)
-		GPIO.remove_event_detect(GPIO_2_FLOW_METER)
+		#GPIO.remove_event_detect(GPIO_2_FLOW_METER)
 
 		global real_start_time_s
 		real_stop_time_s = datetime.now()
@@ -241,9 +182,9 @@ def disable_valve(valve_id):
 		send_email('General failure', 'Error in disable_valve: ' + repr(ex))
 
 
-def sensor_callback(channel):
-	global flow_rising_count
-	flow_rising_count = flow_rising_count + 1
+#def sensor_callback(channel):
+#	global flow_rising_count
+#	flow_rising_count = flow_rising_count + 1
 
 
 def gpio_init():
@@ -251,7 +192,7 @@ def gpio_init():
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setwarnings(False)
 
-		GPIO.setup(GPIO_2_FLOW_METER, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+		#GPIO.setup(GPIO_2_FLOW_METER, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 		GPIO.setup(GPIO_4_RIGHT, GPIO.OUT)
 		GPIO.setup(GPIO_5_FAR, GPIO.OUT)
@@ -267,7 +208,7 @@ def gpio_init():
 		send_email('General failure', 'Error in gpio_init: ' + repr(ex))
 
 
-def schedule_morning_run():
+def schedule_daily_run():
 	try:
 		minutes_to_run = [0, 0, 0]
 		if MANUAL_MINUTES:
@@ -286,16 +227,16 @@ def schedule_morning_run():
 
 		run_time = datetime.now()
 		if minutes_to_run != [0, 0, 0]:
-			for i in range(0, len(CIRCUITS)):
+			for i in range(0, len(CIRCUIT_DEFINITIONS)):
 				run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
-				background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
+				background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUIT_DEFINITIONS[i]['PORT'], CIRCUIT_DEFINITIONS[i]['NAME']])
 
 				run_time = run_time + timedelta(minutes=minutes_to_run[i], seconds=DELAY_BETWEEN_CIRCUITS)
-				background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUITS[i]])
+				background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUIT_DEFINITIONS[i]['PORT'], CIRCUIT_DEFINITIONS[i]['NAME']])
 
 	except Exception as ex:
-		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in schedule_morning_run: ' + repr(ex))
-		send_email('General failure', 'Error in schedule_morning_run: ' + repr(ex))
+		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in schedule_daily_run: ' + repr(ex))
+		send_email('General failure', 'Error in schedule_daily_run: ' + repr(ex))
 
 
 def wait_for_network():
@@ -354,7 +295,7 @@ if __name__ == '__main__':
 		morning_run = datetime.now().replace(hour=START_TIME_MORNING.hour, minute=START_TIME_MORNING.minute,
 											 second=START_TIME_MORNING.second)
 
-		background_scheduler.add_job(schedule_morning_run, 'cron', hour=morning_run.hour, minute=morning_run.minute,
+		background_scheduler.add_job(schedule_daily_run, 'cron', hour=morning_run.hour, minute=morning_run.minute,
 									 second=morning_run.second)
 		
 		content = 'MORNING_RUN_ENABLED: True' + '\n' +\
