@@ -24,7 +24,7 @@ HEADER = {'x-api-key': 'yTLyU2J2XraoSZ4LEHpG35izWgS22AMs1DmRJqmZ'}
 
 # ------------------ READ CONFIG FILE ---------------------
 config = configparser.ConfigParser()
-config.read('valve_shceduler.conf')
+config.read('valve_scheduler.conf')
 
 START_TIME_MORNING = config['RUN']['RUNTIME']
 MANUAL_MINUTES = config['RUN']['MANUAL_MINUTES_CALCULATION']
