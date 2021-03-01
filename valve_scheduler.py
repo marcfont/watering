@@ -14,6 +14,7 @@ import RPi.GPIO as GPIO
 import math
 import urllib3
 import subprocess
+import traceback
 # no need to worry about SSL to verify connection to meteo.cat
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 HEADER = {'x-api-key': 'yTLyU2J2XraoSZ4LEHpG35izWgS22AMs1DmRJqmZ'}
@@ -89,8 +90,8 @@ def __evapo_yesterday_Oris():
 		return [eto, rain]
 
 	except Exception as ex:
-		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __evapo_yesterday_Oris: ' + repr(ex))
-		send_email('General failure', 'Error in __evapo_yesterday_Oris: ' + repr(ex))
+		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __evapo_yesterday_Oris: ' + traceback.print_exc())
+		send_email('General failure', 'Error in __evapo_yesterday_Oris: ' + traceback.print_exc())
 
 
 def minutes():
@@ -107,8 +108,8 @@ def minutes():
 			return [0, 0, 0]
 
 	except Exception as ex:
-		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in minutes: ' + repr(ex))
-		send_email('General failure', 'Error in minutes: ' + repr(ex))
+		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in minutes: ' + traceback.print_exc())
+		send_email('General failure', 'Error in minutes: ' + traceback.print_exc())
 
 
 def print_minutes():
@@ -135,8 +136,8 @@ def send_email(subject, body):
 			server.sendmail(sender_email, receiver_email, text)
 
 	except Exception as ex:
-		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in send_email: ' + repr(ex))
-		send_email('General failure', 'Error in send_email: ' + repr(ex))
+		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in send_email: ' + traceback.print_exc())
+		send_email('General failure', 'Error in send_email: ' + traceback.print_exc())
 
 
 def enable_valve(valve_id):
@@ -150,8 +151,8 @@ def enable_valve(valve_id):
 		#GPIO.add_event_detect(GPIO_2_FLOW_METER, GPIO.RISING, callback=sensor_callback)
 
 	except Exception as ex:
-		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in enable_valve: ' + repr(ex))
-		send_email('General failure', 'Error in enable_valve: ' + repr(ex))
+		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in enable_valve: ' + traceback.print_exc())
+		send_email('General failure', 'Error in enable_valve: ' + traceback.print_exc())
 
 
 def disable_valve(valve_id):
@@ -177,8 +178,8 @@ def disable_valve(valve_id):
 											 + ' liters')
 
 	except Exception as ex:
-		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in disable_valve: ' + repr(ex))
-		send_email('General failure', 'Error in disable_valve: ' + repr(ex))
+		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in disable_valve: ' + traceback.print_exc())
+		send_email('General failure', 'Error in disable_valve: ' + traceback.print_exc())
 
 
 #def sensor_callback(channel):
@@ -199,8 +200,8 @@ def gpio_init():
 			GPIO.output(int(CIRCUIT_DEFINITIONS[i]['PORT']), GPIO.HIGH)			
 
 	except Exception as ex:
-		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in gpio_init: ' + repr(ex))
-		send_email('General failure', 'Error in gpio_init: ' + repr(ex))
+		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in gpio_init: ' + traceback.print_exc())
+		send_email('General failure', 'Error in gpio_init: ' + traceback.print_exc())
 
 
 def schedule_daily_run():
@@ -232,8 +233,8 @@ def schedule_daily_run():
 				background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUIT_DEFINITIONS[i]['PORT'], CIRCUIT_DEFINITIONS[i]['NAME']])
 
 	except Exception as ex:
-		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in schedule_daily_run: ' + repr(ex))
-		send_email('General failure', 'Error in schedule_daily_run: ' + repr(ex))
+		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in schedule_daily_run: ' + traceback.print_exc())
+		send_email('General failure', 'Error in schedule_daily_run: ' + traceback.print_exc())
 
 
 def wait_for_network():
@@ -258,9 +259,9 @@ def wait_for_network():
 				logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Awaiting Internet to come up')
 
 	except Exception as ex:
-		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in wait_for_network: ' + repr(ex))
+		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in wait_for_network: ' + traceback.print_exc())
 		# this may fail anyway
-		send_email('General failure', 'Error in wait_for_network: ' + repr(ex))
+		send_email('General failure', 'Error in wait_for_network: ' + traceback.print_exc())
 
 
 if __name__ == '__main__':
@@ -308,5 +309,5 @@ if __name__ == '__main__':
 			t.sleep(1000)
 
 	except Exception as e:
-		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __main__: ' + repr(e))
-		send_email('General failure', 'Error in __main__: ' + repr(e))
+		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __main__: ' + traceback.print_exc())
+		send_email('General failure', 'Error in __main__: ' + traceback.print_exc())
