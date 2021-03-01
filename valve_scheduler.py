@@ -26,15 +26,15 @@ with open('valve_scheduler.conf') as f:
     config = json.load(f)
 json.dump(config, open('conf.json', 'w'))
 
-START_TIME_MORNING = config['RUNTIME']
-MANUAL_MINUTES = bool(config['MANUAL_MINUTES_CALCULATION'])
+START_TIME_MORNING = t.strptime(config['RUNTIME'], '%H:%M:%S')
+MANUAL_MINUTES = bool(int(config['MANUAL_MINUTES_CALCULATION']))
 
-KJ = config['KJ'] 
-EFFECTIVE_RAIN = config['EFFECTIVE_RAIN'] 
-REAL_ETO_TO_MINUTES_SLOPE = config['REAL_ETO_TO_MINUTES_SLOPE'] 
-STRAWBERRY_TO_GRASS = config['STRAWBERRY_TO_GRASS'] 
-MIN_ETO_REAL = config['MIN_ETO_REAL'] 
-DELAY_BETWEEN_CIRCUITS = config['DELAY_BETWEEN_CIRCUITS'] 
+KJ = float(config['KJ'])
+EFFECTIVE_RAIN = float(config['EFFECTIVE_RAIN'] )
+REAL_ETO_TO_MINUTES_SLOPE = int(config['REAL_ETO_TO_MINUTES_SLOPE'])
+STRAWBERRY_TO_GRASS = float(config['STRAWBERRY_TO_GRASS'])
+MIN_ETO_REAL = float(config['MIN_ETO_REAL'])
+DELAY_BETWEEN_CIRCUITS = int(config['DELAY_BETWEEN_CIRCUITS'])
 
 CIRCUIT_DEFINITIONS = config['CIRCUIT_DEFINITIONS'] 
 
