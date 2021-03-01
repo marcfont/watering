@@ -290,9 +290,6 @@ if __name__ == '__main__':
 
 		gpio_init()
 
-		morning_run = datetime.now().replace(hour=START_TIME_MORNING.hour, minute=START_TIME_MORNING.minute,
-											 second=START_TIME_MORNING.second)
-
 		background_scheduler.add_job(schedule_daily_run, 'cron', hour = int(t.strftime('%H', START_TIME_MORNING)), 
 															 	 minute = int(t.strftime('%M', START_TIME_MORNING)), 
 																 second = int(t.strftime('%S', START_TIME_MORNING)))
