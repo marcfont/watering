@@ -195,9 +195,9 @@ def gpio_init():
 		#GPIO.setup(GPIO_2_FLOW_METER, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		
 		for i in range(len(CIRCUIT_DEFINITIONS)):
-			GPIO.setup(CIRCUIT_DEFINITIONS[i]['PORT'], GPIO.OUT)
+			GPIO.setup(int(CIRCUIT_DEFINITIONS[i]['PORT']), GPIO.OUT)
 			# this shouldn't be needed but here it comes just in case
-			GPIO.output(CIRCUIT_DEFINITIONS[i]['PORT'], GPIO.HIGH)			
+			GPIO.output(int(CIRCUIT_DEFINITIONS[i]['PORT']), GPIO.HIGH)			
 
 	except Exception as ex:
 		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in gpio_init: ' + repr(ex))
