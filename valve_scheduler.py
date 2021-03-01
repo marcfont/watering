@@ -14,7 +14,6 @@ import RPi.GPIO as GPIO
 import math
 import urllib3
 import subprocess
-import configparser
 # no need to worry about SSL to verify connection to meteo.cat
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 HEADER = {'x-api-key': 'yTLyU2J2XraoSZ4LEHpG35izWgS22AMs1DmRJqmZ'}
@@ -23,8 +22,8 @@ HEADER = {'x-api-key': 'yTLyU2J2XraoSZ4LEHpG35izWgS22AMs1DmRJqmZ'}
 #flow_rising_count = 0
 
 # ------------------ READ CONFIG FILE ---------------------
-config = configparser.ConfigParser()
-config.read('valve_scheduler.conf')
+with open('valve_scheduler.conf') as f:
+    config = json.load(f)
 
 START_TIME_MORNING = config['RUN']['RUNTIME']
 MANUAL_MINUTES = config['RUN']['MANUAL_MINUTES_CALCULATION']
