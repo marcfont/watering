@@ -140,10 +140,10 @@ def send_email(subject, body):
 		send_email('General failure', 'Error in send_email: ' + traceback.print_exc())
 
 
-def enable_valve(valve_id):
+def enable_valve(valve_id, valve_name):
 	try:
 		logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Enable valve in pin: ' + str(valve_id))
-		send_email('Enable', str(CIRCUIT_NAMES[valve_id]) + ' has been enabled.')
+		send_email('Enable', str(valve_name) + ' has been enabled.')
 
 		global real_start_time_s
 		real_start_time_s = datetime.now()
@@ -155,27 +155,25 @@ def enable_valve(valve_id):
 		send_email('General failure', 'Error in enable_valve: ' + traceback.print_exc())
 
 
-def disable_valve(valve_id):
+def disable_valve(valve_id, valve_name):
 	try:
 		GPIO.output(valve_id, GPIO.HIGH)
 		#GPIO.remove_event_detect(GPIO_2_FLOW_METER)
 
-		global real_start_time_s
-		real_stop_time_s = datetime.now()
-		delta = real_stop_time_s - real_start_time_s
-		pouring_time_s = delta.seconds
+		# global real_start_time_s
+		# real_stop_time_s = datetime.now()
+		# delta = real_stop_time_s - real_start_time_s
+		# pouring_time_s = delta.seconds
 
-		global flow_rising_count
-		flow_l_per_minute = (flow_rising_count / pouring_time_s) / 4.8
-		volume = flow_l_per_minute * (pouring_time_s / 60)
-		flow_rising_count = 0
+		# global flow_rising_count
+		# flow_l_per_minute = (flow_rising_count / pouring_time_s) / 4.8
+		# volume = flow_l_per_minute * (pouring_time_s / 60)
+		# flow_rising_count = 0
 
-		send_email('Disable', str(CIRCUIT_NAMES[valve_id]) + ' has been disabled.\nWatering volume has been '
-				   + str(round(volume)) + ' liters.')
+		send_email('Disable', str(valve_name) + ' has been disabled.')
 
 		logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Disable valve in pin: ' + str(valve_id))
-		logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering volume has been ' + str(round(volume))
-											 + ' liters')
+		# logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering volume has been ' + str(round(volume)) + ' liters')
 
 	except Exception as ex:
 		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in disable_valve: ' + traceback.print_exc())
@@ -227,10 +225,12 @@ def schedule_daily_run():
 		if minutes_to_run != [0, 0, 0]:
 			for i in range(0, len(CIRCUIT_DEFINITIONS)):
 				run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
-				background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUIT_DEFINITIONS[i]['PORT'], CIRCUIT_DEFINITIONS[i]['NAME']])
+				background_scheduler.add_job(enable_valve, 'date', run_date=run_time, 
+							args=[int(CIRCUIT_DEFINITIONS[i]['PORT']), CIRCUIT_DEFINITIONS[i]['NAME']])
 
 				run_time = run_time + timedelta(minutes=minutes_to_run[i], seconds=DELAY_BETWEEN_CIRCUITS)
-				background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUIT_DEFINITIONS[i]['PORT'], CIRCUIT_DEFINITIONS[i]['NAME']])
+				background_scheduler.add_job(disable_valve, 'date', run_date=run_time, 
+							args=[int(CIRCUIT_DEFINITIONS[i]['PORT']), CIRCUIT_DEFINITIONS[i]['NAME']])
 
 	except Exception as ex:
 		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in schedule_daily_run: ' + traceback.print_exc())
