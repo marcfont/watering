@@ -300,7 +300,7 @@ if __name__ == '__main__':
 		'START_TIME: ' + t.strftime('%H:%M:%S', START_TIME)
 
 		if MANUAL_MINUTES:
-			content = content + '\nMANUAL_MINUTES: ' + str(bool(MANUAL_MINUTES))
+			content = content + '\nMANUAL_MINUTES: ' + str(bool(MANUAL_MINUTES) + '\n')
 			for i in range(len(CIRCUIT_DEFINITIONS)):
 				content = content + 'RUN TIME FOR '+ CIRCUIT_DEFINITIONS[i]['NAME'] + ' IS ' +\
 								    CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'] + ' MINUTES\n'			
