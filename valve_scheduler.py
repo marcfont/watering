@@ -269,7 +269,7 @@ if __name__ == '__main__':
 		logging.info('------------------------------------------------------------')
 		logging.info('------------------------System boot on: ' + datetime.now().strftime('%d/%m/%Y, %H:%M:%S'))
 		logging.info('------------------------WATERING_RUN_ENABLED: True')
-		logging.info('------------------------START_TIME: ' + str(START_TIME.strftime('%H:%M:%S')))
+		logging.info('------------------------START_TIME: ' + t.strftime('%H:%M:%S', START_TIME))
 		if MANUAL_MINUTES:
 			logging.info('------------------------MANUAL_MINUTES: ' + str(bool(MANUAL_MINUTES)))
 			for i in range(len(CIRCUIT_DEFINITIONS)):
@@ -297,7 +297,7 @@ if __name__ == '__main__':
 																 second = int(t.strftime('%S', START_TIME)))
 		
 		content = 'WATERING_RUN_ENABLED: True' + '\n' +\
-		'START_TIME: ' + str(START_TIME)
+		'START_TIME: ' + t.strftime('%H:%M:%S', START_TIME)
 
 		if MANUAL_MINUTES:
 			content = content + '\nMANUAL_MINUTES: ' + str(bool(MANUAL_MINUTES))
