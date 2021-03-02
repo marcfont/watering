@@ -302,9 +302,9 @@ if __name__ == '__main__':
 		if MANUAL_MINUTES:
 			content = content + '\nMANUAL_MINUTES: ' + str(bool(MANUAL_MINUTES))
 			for i in range(len(CIRCUIT_DEFINITIONS)):
-				content = content + CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'])
+				content = content + CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES']
 				content = content + 'RUN TIME FOR '+ CIRCUIT_DEFINITIONS[i]['NAME'] + ' IS '
-							+ CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'] + ' MINUTES')			
+							+ CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'] + ' MINUTES'			
 				   
 		send_email('Watering calculation scheduled (program restart)', content)
 
