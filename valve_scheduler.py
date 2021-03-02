@@ -112,7 +112,7 @@ def minutes():
 
 
 def print_minutes():
-	print('Morning: ' + str(minutes()))
+	print('Minutes: ' + str(minutes()))
 	
 def send_email(subject, body):
 	try:
@@ -213,10 +213,10 @@ def schedule_daily_run():
 
 		send_email('Watering cycle running: \n',
 				   'START_TIME: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
-				   'MINUTES_MORNING: ' + str(minutes_to_run))
+				   'CYCLE_MINUTES: ' + str(minutes_to_run))
 		logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering cycle running: \n' +
 					 'START_TIME: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
-					 'MINUTES_MORNING: ' + str(minutes_to_run))
+					 'CYCLE_MINUTES: ' + str(minutes_to_run))
 					 
 		#TODO guardar a la DB (veure TODO.txt)
 
@@ -302,9 +302,9 @@ if __name__ == '__main__':
 		if MANUAL_MINUTES:
 			content = content + '\nMANUAL_MINUTES: ' + str(bool(MANUAL_MINUTES))
 			for i in range(len(CIRCUIT_DEFINITIONS)):
-				content = content + CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES']
+				content = content + CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES' + '\n']
 				content = content + 'RUN TIME FOR '+ CIRCUIT_DEFINITIONS[i]['NAME'] + ' IS ' +\
-								    CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'] + ' MINUTES'			
+								    CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'] + ' MINUTES\n'			
 				   
 		send_email('Watering calculation scheduled (program restart)', content)
 
