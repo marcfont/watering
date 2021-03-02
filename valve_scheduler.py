@@ -102,8 +102,7 @@ def minutes():
 		if eto_real >= MIN_ETO_REAL:
 			grass_minutes = eto_real * REAL_ETO_TO_MINUTES_SLOPE
 			strawberry_minutes = grass_minutes * STRAWBERRY_TO_GRASS
-			morning = [round(grass_minutes / 2), round(strawberry_minutes), round(grass_minutes / 2)]
-			return morning
+			return [round(grass_minutes / 2), round(strawberry_minutes), round(grass_minutes / 2)]
 		else:
 			return [0, 0, 0]
 
@@ -208,14 +207,14 @@ def schedule_daily_run():
 		if MANUAL_MINUTES:
 			minutes_to_run = []
 			for i in range(len(CIRCUIT_DEFINITIONS)):
-				minutes_to_run.append(CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'])
+				minutes_to_run.append(int(CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES']))
 		else:
 			minutes_to_run = minutes()
 
-		send_email('Watering morning running: ',
+		send_email('Watering cycle running: \n',
 				   'START_TIME: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
 				   'MINUTES_MORNING: ' + str(minutes_to_run))
-		logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering morning running: \n' +
+		logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering cycle running: \n' +
 					 'START_TIME: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
 					 'MINUTES_MORNING: ' + str(minutes_to_run))
 					 
@@ -269,14 +268,14 @@ if __name__ == '__main__':
 		logging.basicConfig(filename='watering.log', level=logging.INFO)
 		logging.info('------------------------------------------------------------')
 		logging.info('------------------------System boot on: ' + datetime.now().strftime('%d/%m/%Y, %H:%M:%S'))
-		logging.info('------------------------MORNING_RUN_ENABLED: True')
-		logging.info('------------------------START_TIME: ' + str(START_TIME))
+		logging.info('------------------------WATERING_RUN_ENABLED: True')
+		logging.info('------------------------START_TIME: ' + str(START_TIME.strftime('%H:%M:%S')))
 		if MANUAL_MINUTES:
-			minutes_to_run = []
-			for i in range(len(CIRCUIT_DEFINITIONS)):
-				minutes_to_run.append(CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'])		
 			logging.info('------------------------MANUAL_MINUTES: ' + str(bool(MANUAL_MINUTES)))
-			logging.info('------------------------MINUTES: ' + str(minutes_to_run))		
+			for i in range(len(CIRCUIT_DEFINITIONS)):
+				logging.info('------------------------RUN TIME FOR '+ CIRCUIT_DEFINITIONS[i]['NAME'] + ' IS '
+							+ CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'] + ' MINUTES')
+			
 		logging.info('------------------------------------------------------------')
 
 		wait_for_network()
@@ -297,12 +296,15 @@ if __name__ == '__main__':
 															 	 minute = int(t.strftime('%M', START_TIME)), 
 																 second = int(t.strftime('%S', START_TIME)))
 		
-		content = 'MORNING_RUN_ENABLED: True' + '\n' +\
+		content = 'WATERING_RUN_ENABLED: True' + '\n' +\
 		'START_TIME: ' + str(START_TIME)
 
 		if MANUAL_MINUTES:
-			content = content + '\nMANUAL_MINUTES: ' + str(bool(MANUAL_MINUTES)) + '\n' +\
-			'MINUTES: ' + str(minutes_to_run)
+			content = content + '\nMANUAL_MINUTES: ' + str(bool(MANUAL_MINUTES))
+			for i in range(len(CIRCUIT_DEFINITIONS)):
+				content = content + CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'])
+				content = content + 'RUN TIME FOR '+ CIRCUIT_DEFINITIONS[i]['NAME'] + ' IS '
+							+ CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'] + ' MINUTES')			
 				   
 		send_email('Watering calculation scheduled (program restart)', content)
 
