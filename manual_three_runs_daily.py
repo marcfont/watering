@@ -1,5 +1,7 @@
 import sys
-from valve_scheduler import *
+from valve_scheduler import gpio_init
+from valve_scheduler import background_scheduler
+
 
 START_TIME_1 = "06:00:00"
 START_TIME_2 = "14:00:00"
@@ -14,11 +16,11 @@ if __name__ == '__main__':
 	background_scheduler = BackgroundScheduler()
 	background_scheduler.start()
 	gpio_init()
-    
+
     background_scheduler.add_job(schedule_daily_run, 'cron', hour = int(t.strftime('%H', START_TIME_1)), 
                                                              minute = int(t.strftime('%M', START_TIME_1)), 
                                                              second = int(t.strftime('%S', START_TIME_1)))
-                                                             
+
     background_scheduler.add_job(schedule_daily_run, 'cron', hour = int(t.strftime('%H', START_TIME_2)), 
                                                              minute = int(t.strftime('%M', START_TIME_2)), 
                                                              second = int(t.strftime('%S', START_TIME_2)))
@@ -26,6 +28,6 @@ if __name__ == '__main__':
     background_scheduler.add_job(schedule_daily_run, 'cron', hour = int(t.strftime('%H', START_TIME_3)), 
                                                              minute = int(t.strftime('%M', START_TIME_3)), 
                                                              second = int(t.strftime('%S', START_TIME_3)))                                                             
-	
-	while True:
-		pass
+
+    while True:
+        pass
