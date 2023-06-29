@@ -1,6 +1,5 @@
 import sys
-from valve_scheduler import gpio_init
-from valve_scheduler import background_scheduler
+from valve_scheduler import *
 
 
 START_TIME_1 = "06:00:00"
