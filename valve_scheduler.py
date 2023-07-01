@@ -271,7 +271,7 @@ if __name__ == '__main__':
 		logging.info('------------------------WATERING_RUN_ENABLED: True')
 		logging.info('------------------------START_TIME: ' + t.strftime('%H:%M:%S', START_TIME))
 		if MANUAL_MINUTES:
-			logging.info('------------------------MANUAL_MINUTES: ' + str(bool(MANUAL_MINUTES)) + '\n')
+			logging.info('------------------------MANUAL_MINUTES: ' + str(MANUAL_MINUTES) + '\n')
 			for i in range(len(CIRCUIT_DEFINITIONS)):
 				logging.info('------------------------RUN TIME FOR '+ CIRCUIT_DEFINITIONS[i]['NAME'] + ' IS ' +\
 							 CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'] + ' MINUTES\n')
@@ -300,7 +300,7 @@ if __name__ == '__main__':
 		'START_TIME: ' + t.strftime('%H:%M:%S', START_TIME)
 
 		if MANUAL_MINUTES:
-			content = content + '\nMANUAL_MINUTES: ' + str(bool(MANUAL_MINUTES) + '\n')
+			content = content + '\nMANUAL_MINUTES: ' + str(MANUAL_MINUTES) + '\n'
 			for i in range(len(CIRCUIT_DEFINITIONS)):
 				content = content + 'RUN TIME FOR '+ CIRCUIT_DEFINITIONS[i]['NAME'] + ' IS ' +\
 								    CIRCUIT_DEFINITIONS[i]['MANUAL_MINUTES'] + ' MINUTES\n'			
