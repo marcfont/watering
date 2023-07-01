@@ -2,9 +2,9 @@ import sys
 from valve_scheduler import *
 
 
-START_TIME_1 = t.strptime("12:31:00", '%H:%M:%S')
-START_TIME_2 = t.strptime("12:36:00", '%H:%M:%S')
-START_TIME_3 = t.strptime("12:41:00", '%H:%M:%S')
+START_TIME_1 = t.strptime("06:00:00", '%H:%M:%S')
+START_TIME_2 = t.strptime("14:00:00", '%H:%M:%S')
+START_TIME_3 = t.strptime("22:00:00", '%H:%M:%S')
 
 DELAY_BETWEEN_CIRCUITS = 5
 
@@ -43,8 +43,18 @@ def schedule_daily_run():
 		send_email('General failure', 'Error in schedule_daily_run: ' + traceback.print_exc())
 
 if __name__ == '__main__':
+	logging.basicConfig(filename='watering.log', level=logging.INFO)
+	
 	background_scheduler = BackgroundScheduler()
 	background_scheduler.start()
+	
+    # Create a log file for all apscheduler events
+    # aplogger = logging.getLogger('apscheduler')
+    aplogger.propagate = False
+    aplogger.setLevel(logging.INFO)
+    aphandler = logging.FileHandler('apscheduler.log')
+    aplogger.addHandler(aphandler)
+
 	gpio_init()
 
 	background_scheduler.add_job(schedule_daily_run, 'cron', hour = int(t.strftime('%H', START_TIME_1)),

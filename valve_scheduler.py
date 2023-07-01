@@ -130,9 +130,9 @@ def send_email(subject, body):
 		text = message.as_string()
 
 		context = ssl.create_default_context()
-		with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-			server.login(sender_email, password)
-			server.sendmail(sender_email, receiver_email, text)
+		#with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+		#	server.login(sender_email, password)
+		#	server.sendmail(sender_email, receiver_email, text)
 
 	except Exception as ex:
 		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in send_email: ' + traceback.print_exc())
