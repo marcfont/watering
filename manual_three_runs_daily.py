@@ -2,9 +2,9 @@ import sys
 from valve_scheduler import *
 
 
-START_TIME_1 = "11:35:00"
-START_TIME_2 = "11:40:00"
-START_TIME_3 = "11:45:00"
+START_TIME_1 = t.strptime("11:41:00", '%H:%M:%S')
+START_TIME_2 = t.strptime("11:46:00", '%H:%M:%S')
+START_TIME_3 = t.strptime("11:51:00", '%H:%M:%S')
 
 DELAY_BETWEEN_CIRCUITS = 5
 
