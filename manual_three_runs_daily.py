@@ -3,9 +3,9 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from valve_scheduler import *
 
 
-START_TIME_1 = t.strptime("11:41:00", '%H:%M:%S')
-START_TIME_2 = t.strptime("11:46:00", '%H:%M:%S')
-START_TIME_3 = t.strptime("11:51:00", '%H:%M:%S')
+START_TIME_1 = t.strptime("11:54:00", '%H:%M:%S')
+START_TIME_2 = t.strptime("11:59:00", '%H:%M:%S')
+START_TIME_3 = t.strptime("12:05:00", '%H:%M:%S')
 
 DELAY_BETWEEN_CIRCUITS = 5
 
