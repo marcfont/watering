@@ -120,7 +120,7 @@ def send_email(subject, body):
 		smtp_server = 'smtp.gmail.com'
 		sender_email = 'watering.espona@gmail.com'
 		receiver_email = 'marc.font@gmail.com'
-		password = 'BeWaterMyFriend'
+		password = 'pipowymaejrwjjsg'
 
 		message = MIMEMultipart()
 		message['From'] = sender_email
