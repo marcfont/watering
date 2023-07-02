@@ -47,13 +47,13 @@ if __name__ == '__main__':
 	
 	background_scheduler = BackgroundScheduler()
 	background_scheduler.start()
-	
+
     # Create a log file for all apscheduler events
-    aplogger = logging.getLogger('apscheduler')
-    aplogger.propagate = False
-    aplogger.setLevel(logging.INFO)
-    aphandler = logging.FileHandler('apscheduler.log')
-    aplogger.addHandler(aphandler)
+	aplogger = logging.getLogger('apscheduler')
+	aplogger.propagate = False
+	aplogger.setLevel(logging.INFO)
+	aphandler = logging.FileHandler('apscheduler.log')
+	aplogger.addHandler(aphandler)
 
 	gpio_init()
 
