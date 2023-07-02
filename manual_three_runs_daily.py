@@ -2,7 +2,7 @@ import sys
 from valve_scheduler import *
 
 
-START_TIME_1 = t.strptime("06:00:00", '%H:%M:%S')
+START_TIME_1 = t.strptime("10:30:00", '%H:%M:%S')
 START_TIME_2 = t.strptime("14:00:00", '%H:%M:%S')
 START_TIME_3 = t.strptime("22:00:00", '%H:%M:%S')
 
@@ -49,7 +49,7 @@ if __name__ == '__main__':
 	background_scheduler.start()
 
 	# Create a log file for all apscheduler events
-	# aplogger = logging.getLogger('apscheduler')
+	aplogger = logging.getLogger('apscheduler')
 	aplogger.propagate = False
 	aplogger.setLevel(logging.INFO)
 	aphandler = logging.FileHandler('apscheduler.log')
