@@ -24,7 +24,7 @@ def schedule_daily_run():
 		logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering cycle running: \n' +
 					 'START_TIME: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
 					 'CYCLE_MINUTES: ' + str(minutes_to_run))
-					 
+
 		#TODO guardar a la DB (veure TODO.txt)
 
 		run_time = datetime.now()
@@ -44,16 +44,16 @@ def schedule_daily_run():
 
 if __name__ == '__main__':
 	logging.basicConfig(filename='watering.log', level=logging.INFO)
-	
+
 	background_scheduler = BackgroundScheduler()
 	background_scheduler.start()
-	
-    # Create a log file for all apscheduler events
-    # aplogger = logging.getLogger('apscheduler')
-    aplogger.propagate = False
-    aplogger.setLevel(logging.INFO)
-    aphandler = logging.FileHandler('apscheduler.log')
-    aplogger.addHandler(aphandler)
+
+	# Create a log file for all apscheduler events
+	# aplogger = logging.getLogger('apscheduler')
+	aplogger.propagate = False
+	aplogger.setLevel(logging.INFO)
+	aphandler = logging.FileHandler('apscheduler.log')
+	aplogger.addHandler(aphandler)
 
 	gpio_init()
 
