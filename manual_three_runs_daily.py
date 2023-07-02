@@ -2,7 +2,7 @@ import sys
 from valve_scheduler import *
 
 
-START_TIME_1 = t.strptime("10:30:00", '%H:%M:%S')
+START_TIME_1 = t.strptime("06:00:00", '%H:%M:%S')
 START_TIME_2 = t.strptime("14:00:00", '%H:%M:%S')
 START_TIME_3 = t.strptime("22:00:00", '%H:%M:%S')
 
@@ -24,7 +24,7 @@ def schedule_daily_run():
 		logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering cycle running: \n' +
 					 'START_TIME: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
 					 'CYCLE_MINUTES: ' + str(minutes_to_run))
-
+					 
 		#TODO guardar a la DB (veure TODO.txt)
 
 		run_time = datetime.now()
@@ -44,7 +44,7 @@ def schedule_daily_run():
 
 if __name__ == '__main__':
 	logging.basicConfig(filename='watering.log', level=logging.INFO)
-
+	
 	background_scheduler = BackgroundScheduler()
 	background_scheduler.start()
 	
