@@ -24,7 +24,7 @@ def schedule_daily_run():
 		logging.info(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Watering cycle running: \n' +
 					 'START_TIME: ' + datetime.now().strftime('%H:%M:%S') + ' \n' +
 					 'CYCLE_MINUTES: ' + str(minutes_to_run))
-					 
+ 
 		#TODO guardar a la DB (veure TODO.txt)
 
 		run_time = datetime.now()
@@ -44,7 +44,7 @@ def schedule_daily_run():
 
 if __name__ == '__main__':
 	logging.basicConfig(filename='watering.log', level=logging.INFO)
-	
+
 	background_scheduler = BackgroundScheduler()
 	background_scheduler.start()
 
@@ -61,13 +61,13 @@ if __name__ == '__main__':
                                                              minute = int(t.strftime('%M', START_TIME_1)),
                                                              second = int(t.strftime('%S', START_TIME_1)))
 
-	background_scheduler.add_job(schedule_daily_run, 'cron', hour = int(t.strftime('%H', START_TIME_2)),
-                                                             minute = int(t.strftime('%M', START_TIME_2)),
-                                                             second = int(t.strftime('%S', START_TIME_2)))
+#	background_scheduler.add_job(schedule_daily_run, 'cron', hour = int(t.strftime('%H', START_TIME_2)),
+#                                                             minute = int(t.strftime('%M', START_TIME_2)),
+#                                                             second = int(t.strftime('%S', START_TIME_2)))
 
-	background_scheduler.add_job(schedule_daily_run, 'cron', hour = int(t.strftime('%H', START_TIME_3)),
-                                                             minute = int(t.strftime('%M', START_TIME_3)),
-                                                             second = int(t.strftime('%S', START_TIME_3)))
+#	background_scheduler.add_job(schedule_daily_run, 'cron', hour = int(t.strftime('%H', START_TIME_3)),
+#                                                             minute = int(t.strftime('%M', START_TIME_3)),
+#                                                             second = int(t.strftime('%S', START_TIME_3)))
 
 	while True:
 		pass
