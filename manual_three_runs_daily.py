@@ -2,9 +2,9 @@ import sys
 from valve_scheduler import *
 
 
-START_TIME_1 = t.strptime("06:00:00", '%H:%M:%S')
+START_TIME_1 = t.strptime("08:00:00", '%H:%M:%S')
 START_TIME_2 = t.strptime("14:00:00", '%H:%M:%S')
-START_TIME_3 = t.strptime("22:00:00", '%H:%M:%S')
+START_TIME_3 = t.strptime("00:36:00", '%H:%M:%S')
 
 DELAY_BETWEEN_CIRCUITS = 5
 
@@ -65,9 +65,9 @@ if __name__ == '__main__':
 #                                                             minute = int(t.strftime('%M', START_TIME_2)),
 #                                                             second = int(t.strftime('%S', START_TIME_2)))
 
-#	background_scheduler.add_job(schedule_daily_run, 'cron', hour = int(t.strftime('%H', START_TIME_3)),
-#                                                             minute = int(t.strftime('%M', START_TIME_3)),
-#                                                             second = int(t.strftime('%S', START_TIME_3)))
+	background_scheduler.add_job(schedule_daily_run, 'cron', hour = int(t.strftime('%H', START_TIME_3)),
+                                                             minute = int(t.strftime('%M', START_TIME_3)),
+                                                             second = int(t.strftime('%S', START_TIME_3)))
 
 	while True:
 		pass
