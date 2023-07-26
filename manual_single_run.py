@@ -18,10 +18,12 @@ if __name__ == '__main__':
 	
 	for i in range(0, len(MINUTES)):
 		run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
-		background_scheduler.add_job(enable_valve, 'date', run_date=run_time, args=[CIRCUIT_DEFINITIONS[i]])
+		background_scheduler.add_job(enable_valve, 'date', run_date=run_time, 
+			       args=[int(CIRCUIT_DEFINITIONS[i]['PORT']), CIRCUIT_DEFINITIONS[i]['NAME']])
 
 		run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS + MINUTES[i] * 60)
-		background_scheduler.add_job(disable_valve, 'date', run_date=run_time, args=[CIRCUIT_DEFINITIONS[i]])
+		background_scheduler.add_job(disable_valve, 'date', run_date=run_time, 
+			       args=[int(CIRCUIT_DEFINITIONS[i]['PORT']), CIRCUIT_DEFINITIONS[i]['NAME']])
 	
 	run_time = run_time + timedelta(seconds=DELAY_BETWEEN_CIRCUITS)
 	background_scheduler.add_job(self_kill, 'date', run_date=run_time)
