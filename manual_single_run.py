@@ -1,7 +1,7 @@
 import sys
 from valve_scheduler import *
 
-MINUTES = [10, 5, 10]
+MINUTES = [1, 0, 1]
 
 DELAY_BETWEEN_CIRCUITS = 5
 
