@@ -1,0 +1,43 @@
+{
+	"KJ": "0.4",
+	"EFFECTIVE_RAIN": "0.8",
+	"REAL_ETO_TO_MINUTES_SLOPE": "10",
+	"STRAWBERRY_TO_GRASS": "0",
+	"MIN_ETO_REAL": "1",
+	"DELAY_BETWEEN_CIRCUITS": "5",
+
+    "RUN_DEFINITIONS":[
+        {
+            "RUNTIME": "06:00:00",
+	        "MANUAL_MINUTES": "0"
+        },
+        {
+            "RUNTIME": "20:00:00",
+	        "MANUAL_MINUTES": "[5, 0, 5]"            
+        }
+    ]
+
+	"CIRCUIT_DEFINITIONS": [
+		{
+			"NAME": "Right circuit",
+			"PORT": "16",
+			"PERCENTAGE": "0.5",
+			"FLOW_L_MIN": "4",
+			"MANUAL_MINUTES": "0"			
+		},
+		{
+			"NAME": "Far circuit",
+			"PORT": "18", 
+			"PERCENTAGE": "0.125", 
+			"FLOW_L_MIN": "4",
+			"MANUAL_MINUTES": "0"
+		},
+		{
+			"NAME": "Left circuit",
+			"PORT": "22",
+			"PERCENTAGE": "0.5",
+			"FLOW_L_MIN": "4",
+			"MANUAL_MINUTES": "0"
+		}
+	]
+}
