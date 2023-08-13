@@ -28,7 +28,7 @@ with open('valve_scheduler.conf') as f:
 json.dump(config, open('conf.json', 'w'))
 
 START_TIME = t.strptime(config['RUNTIME'], '%H:%M:%S')
-MANUAL_MINUTES = bool(int(config['MANUAL_MINUTES_CALCULATION']))
+MANUAL_MINUTES = bool(int(config['MANUAL_MINUTES']))
 
 KJ = float(config['KJ'])
 EFFECTIVE_RAIN = float(config['EFFECTIVE_RAIN'] )
