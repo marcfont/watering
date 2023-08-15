@@ -41,12 +41,13 @@ CIRCUIT_DEFINITIONS = config['CIRCUIT_DEFINITIONS']
 
 real_start_time_s = None
 
-def __evapo_yesterday_Oris():
+def __evapo_Oris():
 	"""
-		returns 24h accumulated evapotraspiration for the day before
+		returns 24h accumulated evapotraspiration and rain for the same day (if run after 18h) or for the day before
 	"""
 
 	api_date = date.today()
+	#TODO: restar un dia només si són més de les 18h
 	api_date = date.today() - timedelta(days=1)
 
 	try:
@@ -72,7 +73,7 @@ def __evapo_yesterday_Oris():
 				eto = eto + (d['valor'])
 		else:
 			# todo: error handling
-			logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' ERROR #1 in __evapo_yesterday_Oris')
+			logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' ERROR #1 in __evapo_Oris')
 			
 		# url model --> https://api.meteo.cat/xema/v1/variables/mesurades/36/2019/05/28?codiEstacio=CC
 		url = 'https://api.meteo.cat/xema/v1/variables/mesurades/35/' \
@@ -90,13 +91,13 @@ def __evapo_yesterday_Oris():
 		return [eto, rain]
 
 	except Exception as ex:
-		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __evapo_yesterday_Oris: ' + traceback.print_exc())
-		send_email('General failure', 'Error in __evapo_yesterday_Oris: ' + traceback.print_exc())
+		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __evapo_Oris: ' + traceback.print_exc())
+		send_email('General failure', 'Error in __evapo_Oris: ' + traceback.print_exc())
 
 
 def minutes():
 	try:
-		[eto, rain] = __evapo_yesterday_Oris()
+		[eto, rain] = __evapo_Oris()
 		eto_real = eto * KJ - rain * EFFECTIVE_RAIN
 
 		if eto_real >= MIN_ETO_REAL:
