@@ -308,7 +308,7 @@ if __name__ == '__main__':
 		send_email('Watering calculation scheduled (program restart)', content)
 
 		while True:
-			t.sleep(1000)
+			t.sleep(60)
 
 	except Exception as e:
 		logging.error(datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + ' Error in __main__: ' + traceback.print_exc())

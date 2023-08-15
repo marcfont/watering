@@ -1,4 +1,5 @@
 import sys
+import time
 from valve_scheduler import *
 
 
@@ -70,4 +71,4 @@ if __name__ == '__main__':
                                                              second = int(t.strftime('%S', START_TIME_3)))
 
 	while True:
-		pass
+		time.sleep(60)
